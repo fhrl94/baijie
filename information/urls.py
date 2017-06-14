@@ -17,14 +17,27 @@ urlpatterns=[
     # ID是empinfo中的pk，formtable是表格中的类对象，table是数据表,name是下个跳转URL名称默认是form
     # ，titlename是标题名称,flag是否是多行信息表默认是true
     #operate行为，默认是add
-    url(r'^EmpPageadd/(?P<ID>[\d]+)',views.PageManage1,{
+    url(r'^EmpPageEdit/(?P<ID>[\d]+)',views.PageManageOperate,{
         'operate':'edit',
         'table':models.Empinfo,
         'formtable':forms.Emp,
         'titlename':'修改员工基本信息',
         'flag':False,
-         },name='EmpPageadd'),
+         },name='EmpPageEdit'),
+    #新增员工信息表无ID，设置为空
+    url(r'EmpPageAdd',views.PageManageOperate,{
+        'operate':'add',
+        'table':models.Empinfo,
+        'formtable':forms.Emp,
+        'titlename':'员工基本信息填写',
+        'flag':False,
+        'ID':None,
+        },name='EmpPageAdd'),
 
+
+
+
+    #无效待注释
     url(r'^EmpPage/',views.PageManage,{
         'ID':'0',
         'flag':False,

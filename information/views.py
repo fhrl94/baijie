@@ -55,7 +55,7 @@ def PageManage(request,ID,formtable,titlename,name='form',flag=True):
     return render(request, 'information/index.html',{'title':titlename,'form':form})
 
 
-def PageManage1(request,ID,formtable,table,titlename,operate='add',name='Form',flag=True):
+def PageManageOperate(request,ID,formtable,table,titlename,operate='add',name='Form',flag=True):
     #ID是empinfo中的pk，formtable是表格中的类对象，table是数据表,name是下个跳转URL名称，titlename是标题名称,flag是否是多行信息表
     '''if (request.session.get('id')!=int(ID) and flag):
         return HttpResponse(u'请勿更改URL')'''
@@ -106,6 +106,8 @@ def PageManage1(request,ID,formtable,table,titlename,operate='add',name='Form',f
         else:
             form=formtable(instance=obj)
         return render(request, 'information/index.html', {'title': titlename, 'form': form})
+
+    #其余情况报错（404或其他）
 
 
 '''
