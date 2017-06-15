@@ -11,7 +11,7 @@
         th,td{
             width: 99px;text-align:center }
         th,td{height: 40px}
-        .title{border: none 0px}
+        .title{border: none 0}
 
     </style>
 </head>
@@ -106,13 +106,17 @@
             <td>{{ edu.EducationBackground }}　</td>
             <td>{{ edu.EducationNature }}　</td>
             <td colspan="2">{{ edu.DiplomaName }}　</td>
+            <td>
+                <a href={% url 'EducationPageEdit' edu.pk %}>编辑</a>
+                <a href={% url 'EducationPageDelete' edu.pk %}>删除</a>
+            </td>
         </tr>
 
         {% endfor %}
 
-        <tr style="border: none">
-            <td colspan="11" style="border: none">
-                <a href={% url 'EducationPage' ID %}>添加</a>
+        <tr >
+            <td colspan="11" >
+                <a href={% url 'EducationPageAdd' ID %}>添加</a>
             </td>
         </tr>
 
@@ -139,8 +143,19 @@
             <td colspan="2">{{ course.CourseLength }}　</td>
             <td colspan="2">{{ course.CoursePlace }}　</td>
             <td colspan="2">{{ course.DiplomaName }}　</td>
+            <td>
+                <a href={% url 'CoursePageEdit' course.pk %}>编辑</a>
+                <a href={% url 'CoursePageDelete' course.pk %}>删除</a>
+            </td>
         </tr>
         {% endfor %}
+
+        <tr >
+            <td colspan="11" >
+                <a href={% url 'CoursePageAdd' ID %}>添加</a>
+            </td>
+        </tr>
+
     </table>
     <table>
         <tr>
@@ -165,10 +180,20 @@
             <td colspan="2">{{ job.JobDuties }}　</td>
             <td colspan="2">{{ Job.CertifierDuty }}　</td>
             <td colspan="2">{{ job.CertifierTel }}　</td>
+            <td>
+                <a href={% url 'JobPageEdit' job.pk %}>编辑</a>
+                <a href={% url 'JobPageDelete' job.pk %}>删除</a>
+            </td>
         </tr>
-
         {% endfor %}
+
+        <tr >
+            <td colspan="11" >
+                <a href={% url 'JobPageAdd' ID %}>添加</a>
+            </td>
+        </tr>
     </table>
+
     <table>
         <tr>
             <th colspan='11'>五、家庭成员</th>
@@ -191,9 +216,18 @@
             <td colspan="3">{{ family.WorkUnit }}　</td>
             <td colspan="2">{{ family.Duty }}　</td>
             <td colspan="2">{{ family.Tel }}　</td>
+            <td>
+                <a href={% url 'FamilyPageEdit' family.pk %}>编辑</a>
+                <a href={% url 'FamilyPageDelete' family.pk %}>删除</a>
+            </td>
         </tr>
-
         {% endfor %}
+
+        <tr >
+            <td colspan="11" >
+                <a href={% url 'FamilyPageAdd' ID %}>添加</a>
+            </td>
+        </tr>
     </table>
 </table>
 </body>

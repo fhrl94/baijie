@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .forms import *
 from . import models
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+
 
 # Create your views here.
 def home(request):
@@ -83,9 +83,9 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate='add',name='F
 
     #基本信息表无删除功能
     elif operate=='delete' and flag==True :
-        ID=table.objects.filter(pk=ID).get().IDCard
+        pkID=table.objects.filter(pk=ID).get().IDCardNo.id
         table.objects.filter(pk=ID).delete()
-        return HttpResponseRedirect(reverse(name, kwargs={"ID": ID}))
+        return HttpResponseRedirect(reverse(name, kwargs={"ID": pkID}))
 
     #表单数据回填
     elif operate=='edit':
@@ -98,7 +98,7 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate='add',name='F
                 if (flag!=True):
                     ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
                 else:
-                    ID=models.Empinfo.objects.filter(id=ID).get().IDCardNo
+                    ID=table.objects.filter(id=ID).get().IDCardNo.id
                 #if (name!=''):
                 return HttpResponseRedirect(reverse(name,kwargs={"ID":ID}))
                 #return HttpResponseRedirect(reverse("home",kwargs={}))
