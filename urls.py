@@ -13,7 +13,7 @@ from information import models
 urlpatterns=[
     url(r'^home/$', views.home, name='home'),
     #flag是验证是否有修改ID
-    url(r'^Form/(?P<ID>[\d]+)', views.Form, {}, name='Form'),
+    url(r'^Form/(?P<ID>[\d]+)', views.Form, {'flag':False}, name='Form'),
 
     #PageManageOperate参数介绍：
     #ID一般是由URL中获取相应参数，如无设置为None           必须设置
@@ -132,48 +132,7 @@ urlpatterns=[
         'titlename': '家庭成员信息删除',
     }, name='FamilyPageDelete'),
     
-    
-    
-    
-    
-    
-    
-    #无效待注释
-    url(r'^EmpPage/', views.PageManage, {
-        'ID':'0',
-        'flag':False,
-        'formtable': forms.Emp,
-        'titlename':'基本信息表',
-        }, name='EmpPage'),
 
-    url(r'^EducationPage/(?P<ID>[\d]+)', views.PageManage, {
-        'formtable': forms.Education,
-        'name':'CoursePage',
-        'titlename':'教育经历表'
-        }, name='EducationPage'),
-    
-    url(r'^CoursePage/(?P<ID>[\d]+)', views.PageManage, {
-        'formtable': forms.Course,
-        'name':'JobPage',
-        'titlename':'培训经历表'
-        }, name='CoursePage'),
-             
-    url(r'^JobPage/(?P<ID>[\d]+)', views.PageManage, {
-        'formtable': forms.Job,
-        'name':'FamilyPage',
-        'titlename':'工作经历表'
-        }, name='JobPage'),
-
-    url(r'^FamilyPage/(?P<ID>[\d]+)', views.PageManage, {
-        'formtable': forms.Family,
-        'name':'',
-        'titlename':'家庭成员表'
-        }, name='FamilyPage'),
-             
-    #url(r'^EducationPage/(?P<ID>[\d]+)',views.EducationPage,name='EducationPage'),
-    #url(r'^CoursePage/(?P<ID>[\d]+)',views.CoursePage,name='CoursePage'),
-    #url(r'^JobPage/(?P<ID>[\d]+)',views.JobPage,name='JobPage'),
-    #url(r'^FamilyPage/(?P<ID>[\d]+)',views.FamilyPage,name='FamilyPage'),
     ]
 
 # ID是empinfo中的pk，formtable是表格中的类对象，table是数据表,name是下个跳转URL名称，titlename是标题名称,flag是否是多行信息表
@@ -181,3 +140,40 @@ urlpatterns=[
     'operate':'add',
 
 }),'''
+'''
+   #无效待注释
+   url(r'^EmpPage/', views.PageManage, {
+       'ID':'0',
+       'flag':False,
+       'formtable': forms.Emp,
+       'titlename':'基本信息表',
+       }, name='EmpPage'),
+
+   url(r'^EducationPage/(?P<ID>[\d]+)', views.PageManage, {
+       'formtable': forms.Education,
+       'name':'CoursePage',
+       'titlename':'教育经历表'
+       }, name='EducationPage'),
+
+   url(r'^CoursePage/(?P<ID>[\d]+)', views.PageManage, {
+       'formtable': forms.Course,
+       'name':'JobPage',
+       'titlename':'培训经历表'
+       }, name='CoursePage'),
+
+   url(r'^JobPage/(?P<ID>[\d]+)', views.PageManage, {
+       'formtable': forms.Job,
+       'name':'FamilyPage',
+       'titlename':'工作经历表'
+       }, name='JobPage'),
+
+   url(r'^FamilyPage/(?P<ID>[\d]+)', views.PageManage, {
+       'formtable': forms.Family,
+       'name':'',
+       'titlename':'家庭成员表'
+       }, name='FamilyPage'),
+
+   #url(r'^EducationPage/(?P<ID>[\d]+)',views.EducationPage,name='EducationPage'),
+   #url(r'^CoursePage/(?P<ID>[\d]+)',views.CoursePage,name='CoursePage'),
+   #url(r'^JobPage/(?P<ID>[\d]+)',views.JobPage,name='JobPage'),
+   #url(r'^FamilyPage/(?P<ID>[\d]+)',views.FamilyPage,name='FamilyPage'),'''

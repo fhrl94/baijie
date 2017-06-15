@@ -3,16 +3,31 @@
 <meta charset ='utf-8'>
 <head>
 	<title>{{title}}</title>
+    <style>
+
+        table{width:70%;margin:0 auto;  }
+
+    </style>
+    <script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+    <script type="text/javascript" src="/static/admin/js/core.js"></script>
+    {{ form.media }}
 </head>
 <body>
-<table>
-<form method='post'>
-{% csrf_token %}
-{{form}}
-{{ form.media }}
- 
-</table>
-<input type="submit" value="提交">
+    <h1>{{title}}</h1>
+    <table>
+        <form method='post'>
+            {% csrf_token %}
+            {{form}}
+            {{ form.media }}
+            <tr>
+                <td colspan="2"><input type="submit" value="提交"></td>
+            </tr>
+        </form>
+    </table>
+
 </body>
 </html>
 

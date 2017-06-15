@@ -18,9 +18,9 @@ class Emp(forms.ModelForm):
         fields ='__all__'
         # fields = ['username','email']       #指定显示的字段
         # exclude = ['username']      #不显示的字段
-        '''widgets={
+        widgets={
             'BirthDate':wg.AdminDateWidget()
-            }'''
+            }
 
 
 

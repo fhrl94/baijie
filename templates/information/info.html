@@ -11,7 +11,7 @@
         th,td{
             width: 99px;text-align:center }
         th,td{height: 40px}
-        .title{border: none 0}
+        .title{border: none 0;font-size: larger}
 
     </style>
 </head>
@@ -23,212 +23,202 @@
     <tr class="title">
         <td class="title" colspan="11">员工个人信息表</td>
     </tr>
+
 </table>
 <table>
-    <table>
-        <tr>
-            <th colspan='11'>一、基本信息</th>
-        </tr>
-        <tr>
-            <td>姓名</td>
-            <td>{{ empform.get.Name }}</td>
-            <td>性别</td>
-            <td>{{ empform.get.get_Sex_display }}</td>
-            <td>民族</td>
-            <td>{{ empform.get.Nationality }}</td>
-            <td>出生日期</td>
-            <td colspan="2">　{{ empform.get.BirthDate }}</td>
-            <td colspan="2" rowspan="5">照片</td>
-        </tr>
-        <tr>
-            <td>籍贯</td>
-            <td colspan="3">{{ empform.get.NativePlace }}</td>
-            <td>政治面貌</td>
-            <td>{{ empform.get.PoliticsStatus }}</td>
-            <td>婚姻状况</td>
-            <td colspan="2">{{ empform.get.get_MaritalStatus_display }}</td>
-        </tr>
-        <tr>
-            <td>联系电话</td>
-            <td>{{ empform.get.Tel }}　</td>
-            <td>电子邮箱</td>
-            <td colspan="2">{{ empform.get.Email }}　</td>
-            <td>身份证号</td>
-            <td colspan="3">{{ empform.get.IDCardNo }}　</td>
-        </tr>
-        <tr>
-            <td>紧急联系<br>人姓名</td>
-            <td>{{ empform.get.EmergencyContactTel }}　</td>
-            <td>与紧急联<br>系人关系</td>
-            <td colspan="2">{{ empform.get.EmergencyContactRelation }}　</td>
-            <td>紧急联系<br>方式</td>
-            <td colspan="3">{{ empform.get.EmergencyContactTel }}　</td>
-        </tr>
-        <tr>
-            <td>现居住地址</td>
-            <td colspan="8">{{ empform.get.CurrentResidentialAddress }}　</td>
-        </tr>
-        <tr>
-            <td>家庭地址</td>
-            <td colspan="10">{{ empform.get.HomeAddress }}　</td>
-        </tr>
-        <tr>
-            <td>身份证地址</td>
-            <td colspan="10">{{ empform.get.IDAddress }}　</td>
-        </tr>
-        <tr>
-            <td colspan="11"><a href={% url 'EmpPageEdit' ID %}>修改</a></td>
-        </tr>
+    <tr>
+        <th colspan='11'>一、基本信息</th>
+    </tr>
+    <tr>
+        <td>姓名</td>
+        <td>{{ empform.get.Name }}</td>
+        <td>性别</td>
+        <td>{{ empform.get.get_Sex_display }}</td>
+        <td>民族</td>
+        <td>{{ empform.get.Nationality }}</td>
+        <td>出生日期</td>
+        <td colspan="2">　{{ empform.get.BirthDate }}</td>
+        <td colspan="2" rowspan="5">照片</td>
+    </tr>
+    <tr>
+        <td>籍贯</td>
+        <td colspan="3">{{ empform.get.NativePlace }}</td>
+        <td>政治面貌</td>
+        <td>{{ empform.get.PoliticsStatus }}</td>
+        <td>婚姻状况</td>
+        <td colspan="2">{{ empform.get.get_MaritalStatus_display }}</td>
+    </tr>
+    <tr>
+        <td>联系电话</td>
+        <td>{{ empform.get.Tel }}　</td>
+        <td>电子邮箱</td>
+        <td colspan="2">{{ empform.get.Email }}　</td>
+        <td>身份证号</td>
+        <td colspan="3">{{ empform.get.IDCardNo }}　</td>
+    </tr>
+    <tr>
+        <td>紧急联系<br>人姓名</td>
+        <td>{{ empform.get.EmergencyContactTel }}　</td>
+        <td>与紧急联<br>系人关系</td>
+        <td colspan="2">{{ empform.get.EmergencyContactRelation }}　</td>
+        <td>紧急联系<br>方式</td>
+        <td colspan="3">{{ empform.get.EmergencyContactTel }}　</td>
+    </tr>
+    <tr>
+        <td>现居住地址</td>
+        <td colspan="8">{{ empform.get.CurrentResidentialAddress }}　</td>
+    </tr>
+    <tr>
+        <td>家庭地址</td>
+        <td colspan="10">{{ empform.get.HomeAddress }}　</td>
+    </tr>
+    <tr>
+        <td>身份证地址</td>
+        <td colspan="10">{{ empform.get.IDAddress }}　</td>
+    </tr>
+    <tr>
+        <td colspan="11"><a href="{% url 'EmpPageEdit' ID %}">修改</a></td>
+    </tr>
 
-    </table>
-    <!-- 教育经历-->
-    <table>
-        <tr colspan="11">
-            <th colspan='11'>二、教育经历（请从最高教育经历开始填写）</th>
-        </tr>
+<!-- 教育经历-->
+    <tr colspan="11">
+        <th colspan='11'>二、教育经历（请从最高教育经历开始填写）</th>
+    </tr>
 
+    <tr>
+        <td colspan="2">起止时间</td>
+        <td colspan="3">学校全称</td>
+        <td colspan="2">专业</td>
+        <td>学历</td>
+        <td>学习性质</td>
+        <td colspan="2">所获证书或奖励</td>
+    </tr>
+
+    {% for edu in educationform.all %}
+
+    <tr>
+        <td>{{ edu.StartTime }}</td>
+        <td>{{ edu.EndTime }}</td>
+        <td colspan="3">{{ edu.UniversityName }}</td>
+        <td colspan="2">{{ edu.Profession }}　</td>
+        <td>{{ edu.EducationBackground }}　</td>
+        <td>{{ edu.EducationNature }}　</td>
+        <td colspan="2">{{ edu.DiplomaName }}　</td>
+        <td>
+            <a href="{% url 'EducationPageEdit' edu.pk %}">编辑</a>
+            <a href="{% url 'EducationPageDelete' edu.pk %}">删除</a>
+
+        </td>
+    </tr>
+
+    {% endfor %}
+
+    <tr >
+        <td colspan="11" >
+            <a href="{% url 'EducationPageAdd' ID %}"></a>
+        </td>
+    </tr>
+
+    <tr>
+        <th colspan='11'>三、培训经历（请从最近培训经历开始填写）</th>
+    </tr>
+     <tr>
+        <td colspan="2">起止时间</td>
+        <td colspan="3">培训机构名称</td>
+        <td colspan="2">培训时长</td>
+        <td colspan="2">培训地点</td>
+        <td colspan="2">证书名称</td>
+    </tr>
+
+    {% for course in courseform.all %}
+    <tr>
+        <td>{{ course.StartTime }}</td>
+        <td>{{ course.EndTime }}</td>
+        <td colspan="3">{{ course.TrainingName }}　</td>
+        <td colspan="2">{{ course.CourseLength }}　</td>
+        <td colspan="2">{{ course.CoursePlace }}　</td>
+        <td colspan="2">{{ course.DiplomaName }}　</td>
+        <td>
+            <a href="{% url 'CoursePageEdit' course.pk %}">编辑</a>
+            <a href="{% url 'CoursePageDelete' course.pk %}">删除</a>
+        </td>
+    </tr>
+    {% endfor %}
+
+    <tr >
+        <td colspan="11" >
+            <a href="{% url 'CoursePageAdd' ID %}">添加</a>
+        </td>
+    </tr>
+
+    <tr>
+        <th colspan='11'>四、工作经历（请从最近工作经历开始填写）</th>
+    </tr>
         <tr>
-            <td colspan="2">起止时间</td>
-            <td colspan="3">学校全称</td>
-            <td colspan="2">专业</td>
-            <td>学历</td>
-            <td>学习性质</td>
-            <td colspan="2">所获证书或奖励</td>
-        </tr>
-    
-        {% for edu in educationform.all %}
+        <td colspan="2">起止时间</td>
+        <td colspan="2">公司全称</td>
+        <td>工作职位</td>
+        <td colspan="2">工作内容</td>
+        <td colspan="2">证明人及其职务</td>
+        <td colspan="2">证明人电话</td>
+    </tr>
 
-        <tr>
-            <td>{{ edu.StartTime }}</td>
-            <td>{{ edu.EndTime }}</td>
-            <td colspan="3">{{ edu.UniversityName }}</td>
-            <td colspan="2">{{ edu.Profession }}　</td>
-            <td>{{ edu.EducationBackground }}　</td>
-            <td>{{ edu.EducationNature }}　</td>
-            <td colspan="2">{{ edu.DiplomaName }}　</td>
-            <td>
-                <a href={% url 'EducationPageEdit' edu.pk %}>编辑</a>
-                <a href={% url 'EducationPageDelete' edu.pk %}>删除</a>
-            </td>
-        </tr>
+    {% for job in jobform.all %}
 
-        {% endfor %}
+    <tr>
+        <td>{{ job.StartTime }}</td>
+        <td>{{ job.EndTime }}</td>
+        <td colspan="2">{{ job.CompanyName }}　</td>
+        <td>{{ job.JobPosition }}　</td>
+        <td colspan="2">{{ job.JobDuties }}　</td>
+        <td colspan="2">{{ Job.CertifierDuty }}　</td>
+        <td colspan="2">{{ job.CertifierTel }}　</td>
+        <td>
+            <a href="{% url 'JobPageEdit' job.pk %}">编辑</a>
+            <a href="{% url 'JobPageDelete' job.pk %}">删除</a>
+        </td>
+    </tr>
+    {% endfor %}
 
-        <tr >
-            <td colspan="11" >
-                <a href={% url 'EducationPageAdd' ID %}>添加</a>
-            </td>
-        </tr>
+    <tr >
+        <td colspan="11" >
+            <a href="{% url 'JobPageAdd' ID %}">添加</a>
+        </td>
+    </tr>
 
+    <tr>
+        <th colspan='11'>五、家庭成员</th>
+    </tr>
+    <tr>
+        <td>姓名</td>
+        <td>与本人关系</td>
+        <td colspan="2">出生年月</td>
+        <td colspan="3">工作单位</td>
+        <td colspan="2">职务</td>
+        <td colspan="2">联系电话</td>
+    </tr>
 
-    </table>
+    {% for family in familyform.all %}
 
-    <table>
-        <tr>
-            <th colspan='11'>三、培训经历（请从最近培训经历开始填写）</th>
-        </tr>
-         <tr>
-            <td colspan="2">起止时间</td>
-            <td colspan="3">培训机构名称</td>
-            <td colspan="2">培训时长</td>
-            <td colspan="2">培训地点</td>
-            <td colspan="2">证书名称</td>
-        </tr>
+    <tr>
+        <td>{{ family.Name }}　</td>
+        <td>{{ family.Relation }}　</td>
+        <td colspan="2">{{ family.BirthDate }}　</td>
+        <td colspan="3">{{ family.WorkUnit }}　</td>
+        <td colspan="2">{{ family.Duty }}　</td>
+        <td colspan="2">{{ family.Tel }}　</td>
+        <td>
+            <a href="{% url 'FamilyPageEdit' family.pk %}">编辑</a>
+            <a href="{% url 'FamilyPageDelete' family.pk %}">删除</a>
+        </td>
+    </tr>
+    {% endfor %}
 
-        {% for course in courseform.all %}
-        <tr>
-            <td>{{ course.StartTime }}</td>
-            <td>{{ course.EndTime }}</td>
-            <td colspan="3">{{ course.TrainingName }}　</td>
-            <td colspan="2">{{ course.CourseLength }}　</td>
-            <td colspan="2">{{ course.CoursePlace }}　</td>
-            <td colspan="2">{{ course.DiplomaName }}　</td>
-            <td>
-                <a href={% url 'CoursePageEdit' course.pk %}>编辑</a>
-                <a href={% url 'CoursePageDelete' course.pk %}>删除</a>
-            </td>
-        </tr>
-        {% endfor %}
-
-        <tr >
-            <td colspan="11" >
-                <a href={% url 'CoursePageAdd' ID %}>添加</a>
-            </td>
-        </tr>
-
-    </table>
-    <table>
-        <tr>
-            <th colspan='11'>四、工作经历（请从最近工作经历开始填写）</th>
-        </tr>
-            <tr>
-            <td colspan="2">起止时间</td>
-            <td colspan="2">公司全称</td>
-            <td>工作职位</td>
-            <td colspan="2">工作内容</td>
-            <td colspan="2">证明人及其职务</td>
-            <td colspan="2">证明人电话</td>
-        </tr>
-
-        {% for job in jobform.all %}
-
-        <tr>
-            <td>{{ job.StartTime }}</td>
-            <td>{{ job.EndTime }}</td>
-            <td colspan="2">{{ job.CompanyName }}　</td>
-            <td>{{ job.JobPosition }}　</td>
-            <td colspan="2">{{ job.JobDuties }}　</td>
-            <td colspan="2">{{ Job.CertifierDuty }}　</td>
-            <td colspan="2">{{ job.CertifierTel }}　</td>
-            <td>
-                <a href={% url 'JobPageEdit' job.pk %}>编辑</a>
-                <a href={% url 'JobPageDelete' job.pk %}>删除</a>
-            </td>
-        </tr>
-        {% endfor %}
-
-        <tr >
-            <td colspan="11" >
-                <a href={% url 'JobPageAdd' ID %}>添加</a>
-            </td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <th colspan='11'>五、家庭成员</th>
-        </tr>
-        <tr>
-            <td>姓名</td>
-            <td>与本人关系</td>
-            <td colspan="2">出生年月</td>
-            <td colspan="3">工作单位</td>
-            <td colspan="2">职务</td>
-            <td colspan="2">联系电话</td>
-        </tr>
-
-        {% for family in familyform.all %}
-
-        <tr>
-            <td>{{ family.Name }}　</td>
-            <td>{{ family.Relation }}　</td>
-            <td colspan="2">{{ family.BirthDate }}　</td>
-            <td colspan="3">{{ family.WorkUnit }}　</td>
-            <td colspan="2">{{ family.Duty }}　</td>
-            <td colspan="2">{{ family.Tel }}　</td>
-            <td>
-                <a href={% url 'FamilyPageEdit' family.pk %}>编辑</a>
-                <a href={% url 'FamilyPageDelete' family.pk %}>删除</a>
-            </td>
-        </tr>
-        {% endfor %}
-
-        <tr >
-            <td colspan="11" >
-                <a href={% url 'FamilyPageAdd' ID %}>添加</a>
-            </td>
-        </tr>
-    </table>
+    <tr >
+        <td colspan="11" >
+            <a href="{% url 'FamilyPageAdd' ID %}">添加</a>
+        </td>
+    </tr>
 </table>
 </body>
 </html>
