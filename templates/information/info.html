@@ -6,13 +6,12 @@
     <title>员工个人信息表</title>
 
     <style>
-        table,tr,td,th{border-collapse: collapse;border: solid 1px #000000}
+        table,tr,td,th{border-collapse: collapse;border: solid 1px #000000 ;white-space: nowrap}
         table{width:999px;margin:0 auto;  }
-        th,td{
-            width: 99px;text-align:center }
         th,td{height: 40px}
         .title{border: none 0;font-size: larger}
-
+        th{text-align: left}
+        td{width: 99px;text-align:center }
     </style>
 </head>
 <body>
@@ -35,16 +34,16 @@
         <td>性别</td>
         <td>{{ empform.get.get_Sex_display }}</td>
         <td>民族</td>
-        <td>{{ empform.get.Nationality }}</td>
+        <td>{{ empform.get.get_Nationality_display }}</td>
         <td>出生日期</td>
-        <td colspan="2">　{{ empform.get.BirthDate }}</td>
+        <td colspan="2">　{{ empform.get.BirthDate|date:"Y-m-d" }}</td>
         <td colspan="2" rowspan="5">照片</td>
     </tr>
     <tr>
         <td>籍贯</td>
         <td colspan="3">{{ empform.get.NativePlace }}</td>
         <td>政治面貌</td>
-        <td>{{ empform.get.PoliticsStatus }}</td>
+        <td>{{ empform.get.get_PoliticsStatus_display }}</td>
         <td>婚姻状况</td>
         <td colspan="2">{{ empform.get.get_MaritalStatus_display }}</td>
     </tr>
@@ -60,12 +59,12 @@
         <td>紧急联系<br>人姓名</td>
         <td>{{ empform.get.EmergencyContactTel }}　</td>
         <td>与紧急联<br>系人关系</td>
-        <td colspan="2">{{ empform.get.EmergencyContactRelation }}　</td>
+        <td colspan="2">{{ empform.get.get_EmergencyContactRelation_display }}　</td>
         <td>紧急联系<br>方式</td>
         <td colspan="3">{{ empform.get.EmergencyContactTel }}　</td>
     </tr>
     <tr>
-        <td>现居住地址</td>
+        <td style="white-space: nowrap">现居住地址</td>
         <td colspan="8">{{ empform.get.CurrentResidentialAddress }}　</td>
     </tr>
     <tr>
@@ -77,7 +76,7 @@
         <td colspan="10">{{ empform.get.IDAddress }}　</td>
     </tr>
     <tr>
-        <td colspan="11"><a href="{% url 'EmpPageEdit' ID %}">修改</a></td>
+        <td colspan="11"><a href="{% url 'EmpPageEdit' empform.get.pk %}">修改</a></td>
     </tr>
 
 <!-- 教育经历-->
@@ -91,17 +90,17 @@
         <td colspan="2">专业</td>
         <td>学历</td>
         <td>学习性质</td>
-        <td colspan="2">所获证书或奖励</td>
+        <td colspan="2" style="white-space: nowrap">所获证书或奖励</td>
     </tr>
 
     {% for edu in educationform.all %}
 
     <tr>
-        <td>{{ edu.StartTime }}</td>
-        <td>{{ edu.EndTime }}</td>
+        <td>{{ edu.StartTime|date:"Y-m-d"  }}</td>
+        <td>{{ edu.EndTime|date:"Y-m-d"  }}</td>
         <td colspan="3">{{ edu.UniversityName }}</td>
         <td colspan="2">{{ edu.Profession }}　</td>
-        <td>{{ edu.EducationBackground }}　</td>
+        <td>{{ edu.get_EducationBackground_display }}　</td>
         <td>{{ edu.EducationNature }}　</td>
         <td colspan="2">{{ edu.DiplomaName }}　</td>
         <td>
@@ -115,7 +114,7 @@
 
     <tr >
         <td colspan="11" >
-            <a href="{% url 'EducationPageAdd' ID %}"></a>
+            <a href="{% url 'EducationPageAdd' empform.get.pk %}">添加</a>
         </td>
     </tr>
 
@@ -132,8 +131,8 @@
 
     {% for course in courseform.all %}
     <tr>
-        <td>{{ course.StartTime }}</td>
-        <td>{{ course.EndTime }}</td>
+        <td>{{ course.StartTime|date:"Y-m-d"  }}</td>
+        <td>{{ course.EndTime|date:"Y-m-d"  }}</td>
         <td colspan="3">{{ course.TrainingName }}　</td>
         <td colspan="2">{{ course.CourseLength }}　</td>
         <td colspan="2">{{ course.CoursePlace }}　</td>
@@ -147,7 +146,7 @@
 
     <tr >
         <td colspan="11" >
-            <a href="{% url 'CoursePageAdd' ID %}">添加</a>
+            <a href="{% url 'CoursePageAdd' empform.get.pk %}">添加</a>
         </td>
     </tr>
 
@@ -166,12 +165,12 @@
     {% for job in jobform.all %}
 
     <tr>
-        <td>{{ job.StartTime }}</td>
-        <td>{{ job.EndTime }}</td>
+        <td>{{ job.StartTime|date:"Y-m-d"  }}</td>
+        <td>{{ job.EndTime|date:"Y-m-d"  }}</td>
         <td colspan="2">{{ job.CompanyName }}　</td>
         <td>{{ job.JobPosition }}　</td>
         <td colspan="2">{{ job.JobDuties }}　</td>
-        <td colspan="2">{{ Job.CertifierDuty }}　</td>
+        <td colspan="2">{{ job.Certifier}} {{job.CertifierDuty }}　</td>
         <td colspan="2">{{ job.CertifierTel }}　</td>
         <td>
             <a href="{% url 'JobPageEdit' job.pk %}">编辑</a>
@@ -182,7 +181,7 @@
 
     <tr >
         <td colspan="11" >
-            <a href="{% url 'JobPageAdd' ID %}">添加</a>
+            <a href="{% url 'JobPageAdd' empform.get.pk %}">添加</a>
         </td>
     </tr>
 
@@ -202,8 +201,8 @@
 
     <tr>
         <td>{{ family.Name }}　</td>
-        <td>{{ family.Relation }}　</td>
-        <td colspan="2">{{ family.BirthDate }}　</td>
+        <td>{{ family.get_Relation_display }}　</td>
+        <td colspan="2">{{ family.BirthDate|date:"Y-m-d"  }}　</td>
         <td colspan="3">{{ family.WorkUnit }}　</td>
         <td colspan="2">{{ family.Duty }}　</td>
         <td colspan="2">{{ family.Tel }}　</td>
@@ -216,7 +215,7 @@
 
     <tr >
         <td colspan="11" >
-            <a href="{% url 'FamilyPageAdd' ID %}">添加</a>
+            <a href="{% url 'FamilyPageAdd' empform.get.pk %}">添加</a>
         </td>
     </tr>
 </table>

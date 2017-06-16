@@ -4,30 +4,37 @@
 <head>
 	<title>{{title}}</title>
     <style>
-
-        table{width:70%;margin:0 auto;  }
-
+        table{width:80%;margin:0 auto;  }
+        td{width: 50%;margin:0 auto;}
+        th{text-align: center}
     </style>
-    <script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
-    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
-    <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
-    <script type="text/javascript" src="/admin/jsi18n/"></script>
-    <script type="text/javascript" src="/static/admin/js/core.js"></script>
-    {{ form.media }}
+
 </head>
 <body>
-    <h1>{{title}}</h1>
+
     <table>
+        <tr>
+            <td colspan="2" style="font-size: 30px;text-align: center">{{title}}</td>
+        </tr>
         <form method='post'>
             {% csrf_token %}
             {{form}}
-            {{ form.media }}
             <tr>
-                <td colspan="2"><input type="submit" value="提交"></td>
+                <td colspan="2" style="text-align: center">
+                    <input type="submit" value="提交"> &nbsp;&nbsp;
+                    {% if ID %}
+                        <input type="button" value="返回" onclick=javascrtpt:jump()></td>
+                    {%endif%}
             </tr>
         </form>
     </table>
-
+    {% if ID %}
+        <script>
+            function jump(){
+                window.location.href="{% url 'Form' ID %}";
+            }
+        </script>
+    {%endif%}
 </body>
 </html>
 

@@ -11,6 +11,9 @@ def home(request):
     return HttpResponse(u'你好')
 
 def Form(request,ID,flag=True):
+    #个人信息表单页
+    #ID是人员信息表中的PK值
+    #flag是否对URL参数进行验证
     if (request.session.get('id')!=int(ID) and flag):
         return HttpResponse(u'请勿更改URL')
     empform=models.Empinfo.objects.filter(id=ID)
@@ -24,39 +27,19 @@ def Form(request,ID,flag=True):
                     'courseform':courseform,
                     'jobform':jobform,
                     'familyform':familyform,
-                    'ID':ID,
                     })
 
 
 
-def PageManage(request,ID,formtable,titlename,name='form',flag=True):
-    #ID是empinfo中的pk，formtable是表格中的类对象，name是下个跳转URL名称，titlename是标题名称
-    '''if (request.session.get('id')!=int(ID) and flag):
-        return HttpResponse(u'请勿更改URL')'''
-    if request.method=='POST':
-        form=formtable(request.POST)
-        if form.is_valid():
-            #form.save()
-            #form.IDCardNo=id
-            if (flag!=True):
-                form.save()
-                ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
-                request.session['id'] = ID
-            else:
-                new_Educationinfo=form.save(commit=False)
-                new_Educationinfo.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
-                new_Educationinfo.save()
-            if (name!=''):
-                return HttpResponseRedirect(reverse(name,kwargs={"ID":ID}))
-            return HttpResponseRedirect(reverse("home",kwargs={}))
-            #reverse
-    else:
-        form=formtable()
-    return render(request, 'information/index.html',{'title':titlename,'form':form})
-
-
-def PageManageOperate(request,ID,formtable,table,titlename,operate='add',name='Form',flag=True):
-    #ID是empinfo中的pk，formtable是表格中的类对象，table是数据表,name是下个跳转URL名称，titlename是标题名称,flag是否是多行信息表
+def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',flag=True):
+    #PageManageOperate参数介绍：
+    #ID一般是由URL中获取相应参数，如无设置为None           必须设置
+    # operate 选填add、delete、edit，标明执行动作          必须设置
+    #formtable 是form对象，指定对应表单                    必须设置
+    #table 是数据表，对应存储的表单                        必须设置
+    #titlename是表单的标题                                 必须设置
+    #flag  True为多行信息表 FALSE为人员信息表 默认是True
+    #name  下一个跳转视图名称 默认是form
     '''if (request.session.get('id')!=int(ID) and flag):
         return HttpResponse(u'请勿更改URL')'''
     if operate=='add':
@@ -79,7 +62,7 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate='add',name='F
                 #reverse
         else:
             form=formtable()
-        return render(request, 'information/index.html', {'title': titlename, 'form': form})
+        return render(request, 'information/index.html', {'title': titlename, 'form': form,})
 
     #基本信息表无删除功能
     elif operate=='delete' and flag==True :
@@ -105,9 +88,11 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate='add',name='F
                 #reverse
         else:
             form=formtable(instance=obj)
-        return render(request, 'information/index.html', {'title': titlename, 'form': form})
+        return render(request, 'information/index.html', {'title': titlename, 'form': form,})
 
     #其余情况报错（404或其他）
+
+#def FormBack(request):
 
 
 '''
@@ -198,20 +183,29 @@ def FamilyPage(request,ID):
     return render(request, 'information/index.html',{'title':'家庭成员表','form':form})
 '''
 
-
-def FamilyPage(request,ID):
-    if (request.session.get('id')!=int(ID)):
+'''
+def PageManage(request,ID,formtable,titlename,name='form',flag=True):
+    #ID是empinfo中的pk，formtable是表格中的类对象，name是下个跳转URL名称，titlename是标题名称
+    if (request.session.get('id')!=int(ID) and flag):
         return HttpResponse(u'请勿更改URL')
     if request.method=='POST':
-        form=Family(request.POST,)
+        form=formtable(request.POST)
         if form.is_valid():
             #form.save()
             #form.IDCardNo=id
-            new_Familyinfo=form.save(commit=False)
-            new_Familyinfo.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
-            new_Familyinfo.save()
+            if (flag!=True):
+                form.save()
+                ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
+                request.session['id'] = ID
+            else:
+                new_Educationinfo=form.save(commit=False)
+                new_Educationinfo.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
+                new_Educationinfo.save()
+            if (name!=''):
+                return HttpResponseRedirect(reverse(name,kwargs={"ID":ID}))
             return HttpResponseRedirect(reverse("home",kwargs={}))
             #reverse
     else:
-        form=Family()
-    return render(request, 'information/index.html',{'title':'家庭成员表','form':form})
+        form=formtable()
+    return render(request, 'information/index.html',{'title':titlename,'form':form})
+'''
