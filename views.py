@@ -14,7 +14,7 @@ def Form(request,ID,flag=True):
     #个人信息表单页
     #ID是人员信息表中的PK值
     #flag是否对URL参数进行验证
-    if (request.session.get('id')!=int(ID) and flag):
+    if (request.session.get('id')!=int(ID) and flag ):
         return HttpResponse(u'请勿更改URL')
     empform=models.Empinfo.objects.filter(id=ID)
     educationform=models.Educationinfo.objects.filter(IDCardNo=ID).order_by('-StartTime')[:2]
@@ -40,9 +40,9 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',f
     #titlename是表单的标题                                 必须设置
     #flag  True为多行信息表 FALSE为人员信息表 默认是True
     #name  下一个跳转视图名称 默认是form
-    '''if (request.session.get('id')!=int(ID) and flag):
-        return HttpResponse(u'请勿更改URL')'''
     if operate=='add':
+        if (ID != None and request.session.get('id') != int(ID) and flag):
+            return HttpResponse(u'请勿更改URL')
         if request.method=='POST':
             form=formtable(request.POST)
             if form.is_valid():
@@ -52,6 +52,8 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',f
                     form.save()
                     ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
                     request.session['id'] = ID
+                    #设置session 过期时间60*60秒
+                    request.session.set_expiry(60*60)
                 else:
                     new_Educationinfo=form.save(commit=False)
                     new_Educationinfo.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
@@ -67,12 +69,17 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',f
     #基本信息表无删除功能
     elif operate=='delete' and flag==True :
         pkID=table.objects.filter(pk=ID).get().IDCardNo.id
+        obj = table.objects.filter(pk=ID).get()
+        if (request.session.get('id') != obj.IDCardNo.id and flag):
+            return HttpResponse(u'请勿更改URL')
         table.objects.filter(pk=ID).delete()
         return HttpResponseRedirect(reverse(name, kwargs={"ID": pkID}))
 
     #表单数据回填
     elif operate=='edit':
         obj = table.objects.filter(pk=ID).get()
+        if (request.session.get('id') != obj.id and flag and request.session.get('id') != obj.IDCardNo.id):
+            return HttpResponse(u'请勿更改URL')
         if request.method=='POST':
             form=formtable(request.POST,instance=obj,)
             if form.is_valid():
@@ -92,7 +99,10 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',f
 
     #其余情况报错（404或其他）
 
-#def FormBack(request):
+def FormBack(request):
+    if (request.session.get('id')==None):
+        return HttpResponse(u'请勿更改URL')
+    return HttpResponseRedirect(reverse('Form', kwargs={"ID": request.session.get('id')}))
 
 
 '''

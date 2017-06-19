@@ -14,6 +14,9 @@
         td{width: 99px;text-align:center }
     </style>
 </head>
+<script src="/static/manage.js">
+</script>
+
 <body>
 <table class="title" >
     <tr class="title">
@@ -76,7 +79,8 @@
         <td colspan="10">{{ empform.get.IDAddress }}　</td>
     </tr>
     <tr>
-        <td colspan="11"><a href="{% url 'EmpPageEdit' empform.get.pk %}">修改</a></td>
+        <td colspan="11"><a href="{% url 'EmpPageEdit' empform.get.pk %}">修改</a>
+        <input type="button" value="修改" onclick=javaScript:firm(2,1,{{empform.get.pk}})></td>
     </tr>
 
 <!-- 教育经历-->
@@ -104,8 +108,10 @@
         <td>{{ edu.EducationNature }}　</td>
         <td colspan="2">{{ edu.DiplomaName }}　</td>
         <td>
-            <a href="{% url 'EducationPageEdit' edu.pk %}">编辑</a>
-            <a href="{% url 'EducationPageDelete' edu.pk %}">删除</a>
+            <!--<a href="{% url 'EducationPageEdit' edu.pk %}">编辑</a>-->
+            <input type="button" value="编辑" onclick=javaScript:firm(2,2,{{ edu.pk }})>
+            <!--<a href="{% url 'EducationPageDelete' edu.pk %}">删除</a>-->
+            <input type="button" value="删除" onclick=javaScript:firm(3,2,{{edu.pk}})>
 
         </td>
     </tr>
@@ -139,14 +145,15 @@
         <td colspan="2">{{ course.DiplomaName }}　</td>
         <td>
             <a href="{% url 'CoursePageEdit' course.pk %}">编辑</a>
-            <a href="{% url 'CoursePageDelete' course.pk %}">删除</a>
+            <input type="button" value="编辑" onclick="javaScript:firm(2,3,{{ course.pk }})">
+            <input type="button" value="删除" onclick="javaScript:firm(3,3,{{ course.pk }})">
         </td>
     </tr>
     {% endfor %}
 
     <tr >
         <td colspan="11" >
-            <a href="{% url 'CoursePageAdd' empform.get.pk %}">添加</a>
+           <input type="button" value="添加" onclick="javaScript:firm(1,3,{{ empform.get.pk }})">
         </td>
     </tr>
 
@@ -219,5 +226,8 @@
         </td>
     </tr>
 </table>
+
+
 </body>
+
 </html>

@@ -14,7 +14,7 @@ urlpatterns=[
     url(r'^home/$', views.home, name='home'),
     #flag是验证是否有修改ID
     url(r'^Form/(?P<ID>[\d]+)', views.Form, {'flag':False}, name='Form'),
-
+    url(r'^FormBack/',views.FormBack,name='FormBack'),
     #PageManageOperate参数介绍：
     #ID一般是由URL中获取相应参数，如无设置为None           必须设置
     # operate 选填add、delete、edit，标明执行动作          必须设置
@@ -25,7 +25,7 @@ urlpatterns=[
     #name  下一个跳转视图名称 默认是form
 
     # 新增员工信息表无ID，设置为空
-    url(r'EmpPageAdd', views.PageManageOperate, {
+    url(r'^EmpPageAdd', views.PageManageOperate, {
         'operate': 'add',
         'table': models.Empinfo,
         'formtable': forms.Emp,
@@ -45,21 +45,21 @@ urlpatterns=[
 
 
     #教育经历信息新增
-    url(r'EducationPageAdd/(?P<ID>[\d]+)',views.PageManageOperate,{
+    url(r'^EducationPageAdd/(?P<ID>[\d]+)',views.PageManageOperate,{
         'operate':'add',
         'table':models.Educationinfo,
         'formtable':forms.Education,
         'titlename':'教育经历信息填写',
     },name='EducationPageAdd'),
     # 教育经历信息修改
-    url(r'EducationPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^EducationPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'edit',
         'table': models.Educationinfo,
         'formtable': forms.Education,
         'titlename': '教育经历信息填写',
     }, name='EducationPageEdit'),
     # 教育经历信息删除
-    url(r'EducationPageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^EducationPageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'delete',
         'table': models.Educationinfo,
         'formtable': forms.Education,
@@ -67,7 +67,7 @@ urlpatterns=[
     }, name='EducationPageDelete'),
 
     # 培训经历信息新增
-    url(r'CoursePageAdd/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^CoursePageAdd/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'add',
         'table': models.Courseinfo,
         'formtable': forms.Course,
