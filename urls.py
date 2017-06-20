@@ -13,7 +13,9 @@ from information import models
 urlpatterns=[
     url(r'^home/$', views.home, name='home'),
     #flag是验证是否有修改ID
-    url(r'^Form/(?P<ID>[\d]+)', views.Form, {'flag':False}, name='Form'),
+    url(r'^Form/(?P<ID>[\d]+)', views.Form, {
+        'flag':False
+    }, name='Form'),
     url(r'^FormBack/',views.FormBack,name='FormBack'),
     #PageManageOperate参数介绍：
     #ID一般是由URL中获取相应参数，如无设置为None           必须设置

@@ -13,15 +13,17 @@ from .models import *
 #from django.forms.widgets import Widget
 #from datetimewidget.widgets import DateWidget
 
+
 class Emp(forms.ModelForm):
     class Meta:
         model=Empinfo
         fields ='__all__'
         # fields = ['username','email']       #指定显示的字段
         # exclude = ['username']      #不显示的字段
-        '''widgets={
-            'BirthDate':DateWidget(attrs={'id':"BirthDate"},usel10n = True,bootstrap_version=3,)
-            }'''
+        widgets={
+            'BirthDate':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d')
+                #(usel10n = True,bootstrap_version=3,)
+            }
 
 
 
@@ -32,7 +34,10 @@ class Education(forms.ModelForm):
         fields ='__all__'
         # fields = ['username','email']       #指定显示的字段
         exclude = ['IDCardNo']      #不显示的字段
-    #Educationinfo.StartTime=forms.fields
+        widgets={
+            'StartTime':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d'),
+            'EndTime':forms.DateInput(attrs={'type': 'date'})
+            }
 
 class Course(forms.ModelForm):
     class Meta:
@@ -40,8 +45,10 @@ class Course(forms.ModelForm):
         fields ='__all__'
         # fields = ['username','email']       #指定显示的字段
         exclude = ['IDCardNo']      #不显示的字段
-        
-    #Educationinfo.StartTime=forms.fields
+        widgets={
+            'StartTime':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d'),
+            'EndTime':forms.DateInput(attrs={'type': 'date'})
+            }
 
 class Job(forms.ModelForm):
     class Meta:
@@ -49,7 +56,10 @@ class Job(forms.ModelForm):
         fields ='__all__'
         # fields = ['username','email']       #指定显示的字段
         exclude = ['IDCardNo']      #不显示的字段
-    #Educationinfo.StartTime=forms.fields
+        widgets={
+            'StartTime':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d'),
+            'EndTime':forms.DateInput(attrs={'type': 'date'})
+            }
 
 class Family(forms.ModelForm):
     class Meta:
@@ -57,4 +67,8 @@ class Family(forms.ModelForm):
         fields ='__all__'
         # fields = ['username','email']       #指定显示的字段
         exclude = ['IDCardNo']      #不显示的字段
+        widgets={
+            'BirthDate':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d' )
+                #(usel10n = True,bootstrap_version=3,)
+            }
     #Educationinfo.StartTime=forms.fields

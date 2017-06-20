@@ -8,7 +8,11 @@
         td{width: 50%;margin:0 auto;}
         th{text-align: center}
     </style>
-
+    <script>
+        function jump(){
+            window.location.href="{% url 'FormBack' %}";
+        }
+    </script>
 </head>
 <body>
 
@@ -26,11 +30,6 @@
             </tr>
         </form>
     </table>
-        <script>
-            function jump(){
-                window.location.href="{% url 'FormBack' %}";
-            }
-        </script>
 </body>
 </html>
 

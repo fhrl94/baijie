@@ -30,18 +30,20 @@
             tablename = 'JobPage';
             break;
         case 5:
-            tablename = 'FamilyPageAdd'
+            tablename = 'FamilyPage'
             break
     }
     url=window.location.href
-    alert(window.location.href)
+    re=/^.+\/information/
+    urlbase=re.exec(url)
+    //alert(urlbase)
     if (operateint==3) {
         if (confirm("你确定提交吗？")) {
-             location.href=tablename+operate+'/'+ID
+             location.href=urlbase+'/'+tablename+operate+'/'+ID
         }
     }
     else {
-        location.href=tablename+operate+'/'+ID
+        location.href=urlbase+'/'+tablename+operate+'/'+ID
     }
 
 
