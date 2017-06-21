@@ -21,7 +21,7 @@ class Emp(forms.ModelForm):
         # fields = ['username','email']       #指定显示的字段
         # exclude = ['username']      #不显示的字段
         widgets={
-            'BirthDate':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d')
+            'BirthDate':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d',)
                 #(usel10n = True,bootstrap_version=3,)
             }
 
