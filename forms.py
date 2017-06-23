@@ -13,6 +13,19 @@ from .models import *
 #from django.forms.widgets import Widget
 #from datetimewidget.widgets import DateWidget
 
+class loginform(forms.ModelForm):
+    class Meta:
+        model=user
+        fields = '__all__'
+        exclude = ['times']  # 不显示的字段
+        widgets={
+            'password':forms.PasswordInput()
+        }
+
+class index(forms.ModelForm):
+    class Meta:
+        model=Empinfo
+        fields=['Name','Tel']
 
 class Emp(forms.ModelForm):
     class Meta:

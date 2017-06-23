@@ -12,9 +12,14 @@ from information import models
 
 urlpatterns=[
     url(r'^home/$', views.home, name='home'),
+
+    url(r'login/',views.login,name='login'),
+
+    url(r'^Index/',views.Index,name='Index'),
+
     #flag是验证是否有修改ID
     url(r'^Form/(?P<ID>[\d]+)', views.Form, {
-        'flag':False
+        # 'flag':False
     }, name='Form'),
     url(r'^FormBack/',views.FormBack,name='FormBack'),
     #PageManageOperate参数介绍：
@@ -76,14 +81,14 @@ urlpatterns=[
         'titlename': '培训经历信息填写',
     }, name='CoursePageAdd'),
     # 培训经历信息修改
-    url(r'CoursePageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^CoursePageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'edit',
         'table': models.Courseinfo,
         'formtable': forms.Course,
         'titlename': '培训经历信息填写',
     }, name='CoursePageEdit'),
     # 培训经历信息删除
-    url(r'CoursePageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^CoursePageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'delete',
         'table': models.Courseinfo,
         'formtable': forms.Course,
@@ -91,21 +96,21 @@ urlpatterns=[
     }, name='CoursePageDelete'),
 
     # 工作经历信息新增
-    url(r'JobPageAdd/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^JobPageAdd/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'add',
         'table': models.Jobinfo,
         'formtable': forms.Job,
         'titlename': '工作经历信息填写',
     }, name='JobPageAdd'),
     # 工作经历信息修改
-    url(r'JobPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^JobPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'edit',
         'table': models.Jobinfo,
         'formtable': forms.Job,
         'titlename': '工作经历信息填写',
     }, name='JobPageEdit'),
     # 工作经历信息删除
-    url(r'JobPageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^JobPageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'delete',
         'table': models.Jobinfo,
         'formtable': forms.Job,
@@ -113,21 +118,21 @@ urlpatterns=[
     }, name='JobPageDelete'),
 
     # 家庭成员信息新增
-    url(r'FamilyPageAdd/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^FamilyPageAdd/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'add',
         'table': models.Familyinfo,
         'formtable': forms.Family,
         'titlename': '家庭成员信息填写',
     }, name='FamilyPageAdd'),
     # 家庭成员信息修改
-    url(r'FamilyPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^FamilyPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'edit',
         'table': models.Familyinfo,
         'formtable': forms.Family,
         'titlename': '家庭成员信息填写',
     }, name='FamilyPageEdit'),
     # 家庭成员信息删除
-    url(r'FamilyPageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
+    url(r'^FamilyPageDelete/(?P<ID>[\d]+)', views.PageManageOperate, {
         'operate': 'delete',
         'table': models.Familyinfo,
         'formtable': forms.Family,

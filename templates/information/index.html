@@ -40,20 +40,20 @@
 </head>
 <body>
 
-    <table>
+<table>
+    <tr>
+        <td colspan="2" style="font-size: 30px;text-align: center;margin:0 auto; ">{{title}}</td>
+    </tr>
+    <form method='post'>
+        {% csrf_token %}
+        {{form}}
         <tr>
-            <td colspan="2" style="font-size: 30px;text-align: center;margin:0 auto; ">{{title}}</td>
+            <td colspan="2" style="text-align: center">
+                <input type="submit" value="提交" class="bt"> &nbsp;&nbsp;
+                <input type="button" value="返回" class="bt" onclick=javascrtpt:jump()></td>
         </tr>
-        <form method='post'>
-            {% csrf_token %}
-            {{form}}
-            <tr>
-                <td colspan="2"  style="text-align: center">
-                    <input type="submit" value="提交" class="bt"> &nbsp;&nbsp;
-                    <input type="button" value="返回" class="bt" onclick=javascrtpt:jump()></td>
-            </tr>
-        </form>
-    </table>
+    </form>
+</table>
 </body>
 </html>
 

@@ -6,9 +6,52 @@ from . import models
 from django.core.urlresolvers import reverse
 
 
+
 # Create your views here.
 def home(request):
     return HttpResponse(u'你好')
+
+def Index(request):
+    if request.method == 'POST':
+        form = index(request.POST)
+        if form.is_valid():
+            form.save()
+            ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['Tel']).get().id
+            request.session['id'] = ID
+            # 设置session 过期时间60*60秒
+            request.session.set_expiry(60 * 60)
+            return HttpResponseRedirect(reverse('Form', kwargs={"ID": ID}))
+    else:
+        form = index()
+    return render(request, 'information/index.html', {'title': u'欢迎', 'form': form, })
+
+# 登录视图
+def login(request):
+    if request.method=='POST':
+        form=loginform(request.POST)
+        if form.is_valid():
+            un=form.cleaned_data['username']
+            pw=form.cleaned_data['password']
+            try:
+                ob=models.user.objects.filter(username=un).get()
+            except :
+                ob=None
+            if ob :#
+                if ob.password==pw and ob.times<5:
+                    request.session['user']=un
+                    ob.times=0
+                    ob.save()
+                    return HttpResponse(u'登录成功')
+                elif ob.times>=5:
+                    return HttpResponse(u'账户已冻结')
+                ob.times=ob.times+1
+                ob.save()
+
+        return render(request,'information/index.html',{'title':u'账户请登录','form':form})
+    else:
+        form = loginform()
+    return render(request,'information/index.html',{'title':u'请登录','form':form})
+
 
 def Form(request,ID,flag=True):
     #个人信息表单页
@@ -51,9 +94,9 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',f
                 if (flag!=True):
                     form.save()
                     ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
-                    request.session['id'] = ID
-                    #设置session 过期时间60*60秒
-                    request.session.set_expiry(60*60)
+                    # request.session['id'] = ID
+                    # #设置session 过期时间60*60秒
+                    # request.session.set_expiry(60*60)
                 else:
                     new_Educationinfo=form.save(commit=False)
                     new_Educationinfo.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
