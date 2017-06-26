@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>人员信息汇总</title>
+</head>
+ <script src="/static/manage.js"></script>
+<body>
+<table>
+    <tr>
+        <th class="th">
+            姓名
+        </th>
+        <th class="th">
+            电话
+        </th>
+        <th class="th">
+            身份证号
+        </th>
+    </tr>
+    {% for form in forms %}
+    <tr>
+        <td class="xx">
+            {{form.Name}}
+        </td>
+        <td class="xx">
+            {{form.Tel}}
+        </td>
+        <td class="xx">
+            {{form.IDCardNo}}
+        </td>
+        <td class="xx">
+            <input type="button" value="查看" onclick="firm(0,0,{{form.pk}})">
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

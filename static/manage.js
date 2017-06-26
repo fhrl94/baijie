@@ -6,6 +6,9 @@
     var operate, tablename
     var url
     switch (operateint) {
+        case 0:
+            operate='';
+            break;
         case 1:
             operate = 'Add';
             break;
@@ -14,9 +17,12 @@
             break;
         case 3:
             operate = 'Delete';
-            break
+            break;
     }
     switch (table) {
+        case 0:
+            tablename='Form';
+            break;
         case 1:
             tablename = 'EmpPage';
             break;
@@ -31,12 +37,12 @@
             break;
         case 5:
             tablename = 'FamilyPage'
-            break
+            break;
     }
     url=window.location.href
     re=/^.+\/information/
     urlbase=re.exec(url)
-    //alert(urlbase)
+    // alert(urlbase)
     if (operateint==3) {
         if (confirm("你确定提交吗？")) {
              location.href=urlbase+'/'+tablename+operate+'/'+ID

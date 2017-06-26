@@ -13,13 +13,15 @@ from information import models
 urlpatterns=[
     url(r'^home/$', views.home, name='home'),
 
-    url(r'login/',views.login,name='login'),
+    url(r'^login/',views.my_login,name='login'),
 
     url(r'^Index/',views.Index,name='Index'),
 
+    url(r'^FormList',views.FormList,name='FormList'),
+
     #flag是验证是否有修改ID
     url(r'^Form/(?P<ID>[\d]+)', views.Form, {
-        # 'flag':False
+        'flag':False
     }, name='Form'),
     url(r'^FormBack/',views.FormBack,name='FormBack'),
     #PageManageOperate参数介绍：

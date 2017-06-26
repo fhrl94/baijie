@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .forms import *
 from . import models
 from django.core.urlresolvers import reverse
-
+from django.contrib.auth import authenticate,login
 
 
 # Create your views here.
@@ -26,32 +26,51 @@ def Index(request):
     return render(request, 'information/index.html', {'title': u'欢迎', 'form': form, })
 
 # 登录视图
-def login(request):
-    if request.method=='POST':
-        form=loginform(request.POST)
+# def login(request):
+#     if request.method=='POST':
+#         form=loginform(request.POST)
+#         if form.is_valid():
+#             un=form.cleaned_data['username']
+#             pw=form.cleaned_data['password']
+#             try:
+#                 ob=models.user.objects.filter(username=un).get()
+#             except :
+#                 ob=None
+#             if ob :#
+#                 if ob.password==pw and ob.times<5:
+#                     request.session['user']=un
+#                     ob.times=0
+#                     ob.save()
+#                     return HttpResponse(u'登录成功')
+#                 elif ob.times>=5:
+#                     return HttpResponse(u'账户已冻结')
+#                 ob.times=ob.times+1
+#                 ob.save()
+#
+#         return render(request,'information/index.html',{'title':u'账户请登录','form':form})
+#     else:
+#         form = loginform()
+#     return render(request,'information/index.html',{'title':u'请登录','form':form})
+
+def my_login(request):
+    if request.method == 'POST':
+        form = loginform(request.POST)
         if form.is_valid():
             un=form.cleaned_data['username']
             pw=form.cleaned_data['password']
-            try:
-                ob=models.user.objects.filter(username=un).get()
-            except :
-                ob=None
-            if ob :#
-                if ob.password==pw and ob.times<5:
-                    request.session['user']=un
-                    ob.times=0
-                    ob.save()
-                    return HttpResponse(u'登录成功')
-                elif ob.times>=5:
-                    return HttpResponse(u'账户已冻结')
-                ob.times=ob.times+1
-                ob.save()
-
-        return render(request,'information/index.html',{'title':u'账户请登录','form':form})
+            user=authenticate(request,username=un,password=pw)
+            if user is not None:
+                login(request,user)
+                return HttpResponse(u'登录成功')
+            else:
+                return render(request, 'information/index.html', {'title': u'密码错误请重新登录', 'form': form})
     else:
         form = loginform()
     return render(request,'information/index.html',{'title':u'请登录','form':form})
 
+def FormList(request):
+    forms=models.Empinfo.objects.all().values('pk','Name','Tel','IDCardNo')
+    return render(request,'information/FormList.html',{'forms':forms})
 
 def Form(request,ID,flag=True):
     #个人信息表单页

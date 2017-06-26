@@ -6,10 +6,10 @@ from django.http import HttpResponse
 
 # Register your models here.
 
-class empinfoAdmin(admin.ModelAdmin):
-    list_display=('Name','Tel')
-
-class userAdmin(admin.ModelAdmin):
-    list_display = ('username','password','times')
-admin.site.register(Empinfo,empinfoAdmin)
-admin.site.register(user,userAdmin)
+# class empinfoAdmin(admin.ModelAdmin):
+#     list_display=('Name','Tel')
+#
+# class userAdmin(admin.ModelAdmin):
+#     list_display = ('username','password','times')
+# admin.site.register(Empinfo,empinfoAdmin)
+# admin.site.register(user,userAdmin)

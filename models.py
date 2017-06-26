@@ -95,7 +95,8 @@ EmergencyContactRelation_choice = (
 # Create your models here.
 class user(models.Model):
     username=models.CharField('用户名',max_length=20,)
-    password=models.CharField('密码',max_length=20,validators=[RegexValidator(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W+)(?!=.*\n).{8,}')])
+    password=models.CharField('密码',max_length=20,#validators=[RegexValidator(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W+)(?!=.*\n).{8,}')]
+                              )
     times=models.IntegerField('错误次数',default=0)
 
 class Empinfo(models.Model):
