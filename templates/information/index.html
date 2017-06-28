@@ -32,11 +32,13 @@
             margin: 0 auto;
         }
     </style>
+    {% if ID %}
     <script>
         function jump(){
-            window.location.href="{% url 'FormBack' %}";
+            window.location.href="{% url 'FormBack' ID %}";
         }
     </script>
+    {% endif %}
 </head>
 <body>
 
@@ -50,7 +52,10 @@
         <tr>
             <td colspan="2" style="text-align: center">
                 <input type="submit" value="提交" class="bt"> &nbsp;&nbsp;
-                <input type="button" value="返回" class="bt" onclick=javascrtpt:jump()></td>
+                {% if ID %}
+                <input type="button" value="返回" class="bt" onclick=javascrtpt:jump()>
+                {% endif %}
+            </td>
         </tr>
     </form>
 </table>

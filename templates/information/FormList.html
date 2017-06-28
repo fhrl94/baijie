@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>人员信息汇总</title>
+    <style>
+        table,tr,td,th{border-collapse: collapse;border: solid 1px #000000 ; border-style: solid;white-space: nowrap;text-align: center}
+        table{width:999px;margin:0 auto;  }
+        th,td{height: 40px}
+    </style>
 </head>
  <script src="/static/manage.js"></script>
 <body>
+<a href="{% url 'logout' %}">退出登录</a>
 <table>
+    <tr>
+        <td colspan="4" class="title" style="border-style: hidden hidden solid hidden ;font-size: larger">
+            人员信息列表
+        </td>
+    </tr>
     <tr>
         <th class="th">
             姓名
@@ -16,6 +27,9 @@
         </th>
         <th class="th">
             身份证号
+        </th>
+        <th class="th">
+            操作
         </th>
     </tr>
     {% for form in forms %}
@@ -29,8 +43,10 @@
         <td class="xx">
             {{form.IDCardNo}}
         </td>
-        <td class="xx">
+        <td class="anniu">
             <input type="button" value="查看" onclick="firm(0,0,{{form.pk}})">
+            <input align="center" type="button" value="打印"
+                       onclick=window.open("{% url 'FormPrint' form.pk %}")>
         </td>
     </tr>
     {% endfor %}

@@ -93,11 +93,11 @@ EmergencyContactRelation_choice = (
 )
 
 # Create your models here.
-class user(models.Model):
-    username=models.CharField('用户名',max_length=20,)
-    password=models.CharField('密码',max_length=20,#validators=[RegexValidator(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W+)(?!=.*\n).{8,}')]
-                              )
-    times=models.IntegerField('错误次数',default=0)
+# class user(models.Model):
+#     username=models.CharField('用户名',max_length=20,)
+#     password=models.CharField('密码',max_length=20,#validators=[RegexValidator(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W+)(?!=.*\n).{8,}')]
+#                               )
+#     times=models.IntegerField('错误次数',default=0)
 
 class Empinfo(models.Model):
     Sex_choices=(
@@ -234,7 +234,7 @@ class Educationinfo(models.Model):
     Profession=models.CharField('专业',max_length=50)
     EducationBackground=models.IntegerField('学历',choices=EducationBackground_choice)
     EducationNature=models.IntegerField('学习性质',choices=EducationNature_choice)
-    DiplomaName=models.CharField('所学证书或奖励',max_length=50,null=True)
+    DiplomaName=models.CharField('所学证书或奖励',max_length=50,null=True,blank=True)
     IDCardNo=models.ForeignKey("Empinfo",on_delete=models.CASCADE,null=True)
     
     def __str__(self):

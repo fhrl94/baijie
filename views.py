@@ -1,10 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from .forms import *
 from . import models
 from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate, login, logout
 
 
 # Create your views here.
@@ -12,45 +13,23 @@ def home(request):
     return HttpResponse(u'你好')
 
 def Index(request):
+    logout(request)
     if request.method == 'POST':
         form = index(request.POST)
         if form.is_valid():
             form.save()
-            ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['Tel']).get().id
+            ID = models.Empinfo.objects.filter(Tel=form.cleaned_data['Tel']).get().id
             request.session['id'] = ID
             # 设置session 过期时间60*60秒
             request.session.set_expiry(60 * 60)
             return HttpResponseRedirect(reverse('Form', kwargs={"ID": ID}))
     else:
         form = index()
-    return render(request, 'information/index.html', {'title': u'欢迎', 'form': form, })
+    return render(request, 'information/index.html', {'title': u'欢迎你加入百捷集团', 'form': form,'ID':0,})
 
-# 登录视图
-# def login(request):
-#     if request.method=='POST':
-#         form=loginform(request.POST)
-#         if form.is_valid():
-#             un=form.cleaned_data['username']
-#             pw=form.cleaned_data['password']
-#             try:
-#                 ob=models.user.objects.filter(username=un).get()
-#             except :
-#                 ob=None
-#             if ob :#
-#                 if ob.password==pw and ob.times<5:
-#                     request.session['user']=un
-#                     ob.times=0
-#                     ob.save()
-#                     return HttpResponse(u'登录成功')
-#                 elif ob.times>=5:
-#                     return HttpResponse(u'账户已冻结')
-#                 ob.times=ob.times+1
-#                 ob.save()
-#
-#         return render(request,'information/index.html',{'title':u'账户请登录','form':form})
-#     else:
-#         form = loginform()
-#     return render(request,'information/index.html',{'title':u'请登录','form':form})
+def result(request):
+    logout(request)
+    return HttpResponse(u'提交成功')
 
 def my_login(request):
     if request.method == 'POST':
@@ -61,22 +40,28 @@ def my_login(request):
             user=authenticate(request,username=un,password=pw)
             if user is not None:
                 login(request,user)
-                return HttpResponse(u'登录成功')
+                # request.session['_auth_user_id']为用户ID
+                return HttpResponseRedirect(reverse(FormList))
             else:
                 return render(request, 'information/index.html', {'title': u'密码错误请重新登录', 'form': form})
     else:
         form = loginform()
     return render(request,'information/index.html',{'title':u'请登录','form':form})
 
+def my_logout(request):
+    logout(request)
+    return  HttpResponse(u'已退出登录')
+
+@login_required(login_url='login')
 def FormList(request):
     forms=models.Empinfo.objects.all().values('pk','Name','Tel','IDCardNo')
     return render(request,'information/FormList.html',{'forms':forms})
 
-def Form(request,ID,flag=True):
+def Form(request,ID,status=False):
     #个人信息表单页
     #ID是人员信息表中的PK值
-    #flag是否对URL参数进行验证
-    if (request.session.get('id')!=int(ID) and flag ):
+    # status确定是否打印
+    if (request.session.get('id')!=int(ID) and request.session.get('_auth_user_id')==None ):
         return HttpResponse(u'请勿更改URL')
     empform=models.Empinfo.objects.filter(id=ID)
     educationform=models.Educationinfo.objects.filter(IDCardNo=ID).order_by('-StartTime')[:2]
@@ -89,50 +74,52 @@ def Form(request,ID,flag=True):
                     'courseform':courseform,
                     'jobform':jobform,
                     'familyform':familyform,
+                    'status':status
                     })
 
 
 
-def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',flag=True):
+def PageManageOperate(request, ID, formtable, table, titlename, operate, name='Form', status=True):
     #PageManageOperate参数介绍：
     #ID一般是由URL中获取相应参数，如无设置为None           必须设置
     # operate 选填add、delete、edit，标明执行动作          必须设置
     #formtable 是form对象，指定对应表单                    必须设置
     #table 是数据表，对应存储的表单                        必须设置
     #titlename是表单的标题                                 必须设置
-    #flag  True为多行信息表 FALSE为人员信息表 默认是True
+    #status  True为多行信息表 FALSE为人员信息表 默认是True
     #name  下一个跳转视图名称 默认是form
     if operate=='add':
-        if (ID != None and request.session.get('id') != int(ID) and flag):
+        if (ID != None and request.session.get('id') != int(ID) and request.session.get('_auth_user_id')==None):
             return HttpResponse(u'请勿更改URL')
         if request.method=='POST':
             form=formtable(request.POST)
             if form.is_valid():
                 #form.save()
                 #form.IDCardNo=id
-                if (flag!=True):
-                    form.save()
-                    ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
-                    # request.session['id'] = ID
-                    # #设置session 过期时间60*60秒
-                    # request.session.set_expiry(60*60)
-                else:
-                    new_Educationinfo=form.save(commit=False)
-                    new_Educationinfo.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
-                    new_Educationinfo.save()
+                # if (status!=True):
+                #     form.save()
+                #     ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
+                #     # request.session['id'] = ID
+                #     # #设置session 过期时间60*60秒
+                #     # request.session.set_expiry(60*60)
+                # else:
+                new_info=form.save(commit=False)
+                new_info.IDCardNo=models.Empinfo.objects.filter(id=ID).get()
+                new_info.save()
                 #if (name!=''):
                 return HttpResponseRedirect(reverse(name,kwargs={"ID":ID}))
                 #return HttpResponseRedirect(reverse("home",kwargs={}))
                 #reverse
         else:
             form=formtable()
-        return render(request, 'information/index.html', {'title': titlename, 'form': form,})
+        return render(request, 'information/index.html', {'title': titlename, 'form': form,'ID':ID})
 
     #基本信息表无删除功能
-    elif operate=='delete' and flag==True :
-        pkID=table.objects.filter(pk=ID).get().IDCardNo.id
+    elif operate=='delete' and status==True :
+        # pkID=table.objects.filter(pk=ID).get().IDCardNo.id
         obj = table.objects.filter(pk=ID).get()
-        if (request.session.get('id') != obj.IDCardNo.id and flag):
+        pkID=obj.IDCardNo.id
+        if (request.session.get('id') != obj.IDCardNo.id and request.session.get('_auth_user_id')==None):
             return HttpResponse(u'请勿更改URL')
         table.objects.filter(pk=ID).delete()
         return HttpResponseRedirect(reverse(name, kwargs={"ID": pkID}))
@@ -140,31 +127,36 @@ def PageManageOperate(request,ID,formtable,table,titlename,operate,name='Form',f
     #表单数据回填
     elif operate=='edit':
         obj = table.objects.filter(pk=ID).get()
-        if (request.session.get('id') != obj.id and flag and request.session.get('id') != obj.IDCardNo.id):
+        if (request.session.get('id') != obj.id and request.session.get('_auth_user_id')==None
+            and request.session.get('id') != obj.IDCardNo.id):
             return HttpResponse(u'请勿更改URL')
         if request.method=='POST':
             form=formtable(request.POST,instance=obj,)
             if form.is_valid():
                 form.save()
                 #form.IDCardNo=id
-                if (flag!=True):
-                    ID = models.Empinfo.objects.filter(IDCardNo=form.cleaned_data['IDCardNo']).get().id
+                if (status!=True):
+                    ID = obj.id
                 else:
-                    ID=table.objects.filter(id=ID).get().IDCardNo.id
+                    ID=obj.IDCardNo.id
                 #if (name!=''):
                 return HttpResponseRedirect(reverse(name,kwargs={"ID":ID}))
                 #return HttpResponseRedirect(reverse("home",kwargs={}))
                 #reverse
         else:
             form=formtable(instance=obj)
-        return render(request, 'information/index.html', {'title': titlename, 'form': form,})
+            if (status != True):
+                ID = obj.id
+            else:
+                ID = obj.IDCardNo.id
+        return render(request, 'information/index.html', {'title': titlename, 'form': form,'ID':ID,})
 
     #其余情况报错（404或其他）
 
-def FormBack(request):
-    if (request.session.get('id')==None):
+def FormBack(request,ID):
+    if (request.session.get('id')!=int(ID) and request.session.get('_auth_user_id')==None):
         return HttpResponse(u'请勿更改URL')
-    return HttpResponseRedirect(reverse('Form', kwargs={"ID": request.session.get('id')}))
+    return HttpResponseRedirect(reverse('Form', kwargs={"ID": ID}))
 
 
 '''
@@ -281,3 +273,29 @@ def PageManage(request,ID,formtable,titlename,name='form',flag=True):
         form=formtable()
     return render(request, 'information/index.html',{'title':titlename,'form':form})
 '''
+# 登录视图
+# def login(request):
+#     if request.method=='POST':
+#         form=loginform(request.POST)
+#         if form.is_valid():
+#             un=form.cleaned_data['username']
+#             pw=form.cleaned_data['password']
+#             try:
+#                 ob=models.user.objects.filter(username=un).get()
+#             except :
+#                 ob=None
+#             if ob :#
+#                 if ob.password==pw and ob.times<5:
+#                     request.session['user']=un
+#                     ob.times=0
+#                     ob.save()
+#                     return HttpResponse(u'登录成功')
+#                 elif ob.times>=5:
+#                     return HttpResponse(u'账户已冻结')
+#                 ob.times=ob.times+1
+#                 ob.save()
+#
+#         return render(request,'information/index.html',{'title':u'账户请登录','form':form})
+#     else:
+#         form = loginform()
+#     return render(request,'information/index.html',{'title':u'请登录','form':form})

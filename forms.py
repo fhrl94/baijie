@@ -13,14 +13,12 @@ from .models import *
 #from django.forms.widgets import Widget
 #from datetimewidget.widgets import DateWidget
 
-class loginform(forms.ModelForm):
-    class Meta:
-        model=user
-        fields = '__all__'
-        exclude = ['times']  # 不显示的字段
-        widgets={
-            'password':forms.PasswordInput()
-        }
+class loginform(forms.Form):
+    username = forms.CharField(label='用户',max_length=20)
+    password = forms.CharField(label='密码',widget=forms.PasswordInput())
+    # widgets={
+    #         'password':forms.PasswordInput()
+    #     }
 
 class index(forms.ModelForm):
     class Meta:
@@ -49,7 +47,7 @@ class Education(forms.ModelForm):
         exclude = ['IDCardNo']      #不显示的字段
         widgets={
             'StartTime':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d'),
-            'EndTime':forms.DateInput(attrs={'type': 'date'})
+            'EndTime':forms.DateInput(attrs={'type': 'date'},format='%Y-%m-%d'),
             }
 
 class Course(forms.ModelForm):
@@ -60,7 +58,7 @@ class Course(forms.ModelForm):
         exclude = ['IDCardNo']      #不显示的字段
         widgets={
             'StartTime':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d'),
-            'EndTime':forms.DateInput(attrs={'type': 'date'})
+            'EndTime':forms.DateInput(attrs={'type': 'date'},format='%Y-%m-%d'),
             }
 
 class Job(forms.ModelForm):
@@ -71,7 +69,7 @@ class Job(forms.ModelForm):
         exclude = ['IDCardNo']      #不显示的字段
         widgets={
             'StartTime':forms.DateInput(attrs={'type':'date',},format='%Y-%m-%d'),
-            'EndTime':forms.DateInput(attrs={'type': 'date'})
+            'EndTime':forms.DateInput(attrs={'type': 'date'},format='%Y-%m-%d'),
             }
 
 class Family(forms.ModelForm):

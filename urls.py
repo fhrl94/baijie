@@ -6,6 +6,7 @@ Created on 2017年6月5日
 '''
 from django.conf.urls import url
 
+
 from information import views
 from information import forms
 from information import models
@@ -15,33 +16,36 @@ urlpatterns=[
 
     url(r'^login/',views.my_login,name='login'),
 
-    url(r'^Index/',views.Index,name='Index'),
+    url(r'^logout/',views.my_logout,name='logout'),
+    url(r'^result/', views.result, name='result'),
 
     url(r'^FormList',views.FormList,name='FormList'),
 
-    #flag是验证是否有修改ID
-    url(r'^Form/(?P<ID>[\d]+)', views.Form, {
-        'flag':False
-    }, name='Form'),
-    url(r'^FormBack/',views.FormBack,name='FormBack'),
+    url(r'^Form/(?P<ID>[\d]+)', views.Form,name='Form'),
+    url(r'^FormPrint/(?P<ID>[\d]+)', views.Form,{
+        'status':True,
+    },name='FormPrint'),
+    url(r'^FormBack/(?P<ID>[\d]+)',views.FormBack,name='FormBack'),
     #PageManageOperate参数介绍：
     #ID一般是由URL中获取相应参数，如无设置为None           必须设置
     # operate 选填add、delete、edit，标明执行动作          必须设置
     #formtable 是form对象，指定对应表单                    必须设置
     #table 是数据表，对应存储的表单                        必须设置
     #titlename是表单的标题                                 必须设置
-    #flag  True为多行信息表 FALSE为人员信息表 默认是True
+    #status  True为多行信息表 FALSE为人员信息表 默认是True
     #name  下一个跳转视图名称 默认是form
 
     # 新增员工信息表无ID，设置为空
-    url(r'^EmpPageAdd', views.PageManageOperate, {
-        'operate': 'add',
-        'table': models.Empinfo,
-        'formtable': forms.Emp,
-        'titlename': '员工基本信息填写',
-        'flag': False,
-        'ID': None,
-    }, name='EmpPageAdd'),
+    url(r'^Index/', views.Index, name='Index'),
+    # 使用新URL,以下不再使用
+    # url(r'^EmpPageAdd', views.PageManageOperate, {
+    #     'operate': 'add',
+    #     'table': models.Empinfo,
+    #     'formtable': forms.Emp,
+    #     'titlename': '员工基本信息填写',
+    #     'status': False,
+    #     'ID': None,
+    # }, name='EmpPageAdd'),
 
     #编辑员工基本信息
     url(r'^EmpPageEdit/(?P<ID>[\d]+)', views.PageManageOperate, {
@@ -49,7 +53,7 @@ urlpatterns=[
         'table': models.Empinfo,
         'formtable': forms.Emp,
         'titlename':'修改员工基本信息',
-        'flag':False,
+        'status':False,
          }, name='EmpPageEdit'),
 
 
