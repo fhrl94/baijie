@@ -16,5 +16,8 @@
                 
 
 ##流程图 ##
-![photo](http://github.com/fhrl94/baijie/raw/master/static/web信息录入.png "流程图")                
+
+![流程图](https://github.com/fhrl94/baijie/raw/master/static/web信息录入.png "流程图")    
+
+
 美观暂待优化
