@@ -1,16 +1,94 @@
+# -*- coding: utf-8 -*-
+import os
+import time
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.utils.http import urlquote
+
 from .forms import *
 from . import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
-
+import pdfkit
+import sys
+from django.http import StreamingHttpResponse
+import zipfile
+import glob
 
 # Create your views here.
 def home(request):
     return HttpResponse(u'你好')
+
+@login_required(login_url='login')
+def pdfs(request,DictIDS):
+    config = pdfkit.configuration(wkhtmltopdf=sys.path[0] + '\information\static\wkhtmltopdf-0.8.3.exe')
+    # string=bytes("",encoding='utf-8')
+    dirlist=sys.path[0] + r'\information\temp\\'
+    for delfile in os.listdir(dirlist):
+        os.remove(sys.path[0] + r'\information\temp\\'+delfile)
+    for Dist in DictIDS:
+        # print(Dist['id'])
+        # string=string+Form(request,Dist['id'],True,True).getvalue()
+        # str=models.Empinfo.objects.filter(id=Dist['id']).get().Name
+
+        str=sys.path[0] + '\information\\temp\\'+(time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(
+                           time.time())))+'.pdf'
+        # print(str)
+        pdfkit.from_string(Form(request,Dist['id'],True,True).getvalue().decode('utf-8'),
+                           str,configuration=config, )
+        os.rename(str,sys.path[0] + '\information\\temp\\' + models.Empinfo.objects.filter(id=Dist['id']).get().Name + '.pdf')
+    files=glob.glob(sys.path[0] + r'\information\temp\*')
+    if os.path.exists(sys.path[0]+r'\information\test.zip'):
+        os.remove(sys.path[0]+r'\information\test.zip')
+    f = zipfile.ZipFile(sys.path[0]+r'\information\test.zip', 'w', zipfile.ZIP_DEFLATED)
+    for file in files:
+        f.write(file,os.path.basename(file))
+    f.close()
+    def file_iterator(file_name, chunk_size=512):
+        with open(file_name,'rb') as f:
+            while True:
+                c = f.read(chunk_size)
+                if c:
+                    yield c
+                else:
+                    break
+    the_file_name = sys.path[0]+r'\information\test.zip'
+    response = StreamingHttpResponse(file_iterator(the_file_name))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}{1}.{2}"'.format(
+        urlquote('员工信息表'),
+        (time.strftime('%Y-%m-%d_%H-%M-%S',
+                       time.localtime(
+                           time.time()))), 'zip')
+    return response
+
+@login_required(login_url='login')
+def pdf(request,ID):
+    config = pdfkit.configuration(wkhtmltopdf=sys.path[0]+'\information\static\wkhtmltopdf-0.8.3.exe')
+    # file=open(sys.path[0]+r'\information\temp.html','wb')
+    # file.write(Form(request,ID,True,True).getvalue())
+    # file.close()
+    pdfkit.from_string(Form(request,ID,True,True).getvalue().decode('utf-8'),
+                       sys.path[0]+'\information\out.pdf',configuration = config,)
+    def file_iterator(file_name, chunk_size=512):
+        with open(file_name,'rb') as f:
+            while True:
+                c = f.read(chunk_size)
+                if c:
+                    yield c
+                else:
+                    break
+    the_file_name = sys.path[0]+'\information\out.pdf'
+    response = StreamingHttpResponse(file_iterator(the_file_name))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}{1}.{2}"'.format(urlquote(models.Empinfo.objects.filter(id=ID).get().Name),
+                                                                                (time.strftime('%Y-%m-%d_%H-%M-%S',
+                                                                                               time.localtime(
+                                                                                                   time.time()))),'pdf')
+    return response
 
 def Index(request):
     logout(request)
@@ -27,9 +105,7 @@ def Index(request):
         form = index()
     return render(request, 'information/index.html', {'title': u'欢迎你加入百捷集团', 'form': form,'ID':0,})
 
-def result(request):
-    logout(request)
-    return HttpResponse(u'提交成功')
+
 
 def my_login(request):
     if request.method == 'POST':
@@ -48,20 +124,20 @@ def my_login(request):
         form = loginform()
     return render(request,'information/index.html',{'title':u'请登录','form':form})
 
-def my_logout(request):
+def my_logout(request,body):
     logout(request)
-    return  HttpResponse(u'已退出登录')
+    return  HttpResponse(body)
 
 @login_required(login_url='login')
 def FormList(request):
     forms=models.Empinfo.objects.all().values('pk','Name','Tel','IDCardNo')
     return render(request,'information/FormList.html',{'forms':forms})
 
-def Form(request,ID,status=False):
+def Form(request,ID,status=False,flag=False):
     #个人信息表单页
     #ID是人员信息表中的PK值
     # status确定是否打印
-    if (request.session.get('id')!=int(ID) and request.session.get('_auth_user_id')==None ):
+    if (request.session.get('id')!=int(ID) and request.session.get('_auth_user_id')==None and flag==False):
         return HttpResponse(u'请勿更改URL')
     empform=models.Empinfo.objects.filter(id=ID)
     educationform=models.Educationinfo.objects.filter(IDCardNo=ID).order_by('-StartTime')[:2]
@@ -299,3 +375,11 @@ def PageManage(request,ID,formtable,titlename,name='form',flag=True):
 #     else:
 #         form = loginform()
 #     return render(request,'information/index.html',{'title':u'请登录','form':form})
+
+# def result(request):
+#     logout(request)
+#     return HttpResponse(u'提交成功')
+
+# @login_required(login_url='login')
+# def FormPrint(request,ID,status,flag):
+#     return Form(request, ID, status=status, flag=flag)

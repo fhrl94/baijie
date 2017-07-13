@@ -46,7 +46,7 @@
         <td class="anniu">
             <input type="button" value="查看" onclick="firm(0,0,{{form.pk}})">
             <input align="center" type="button" value="打印"
-                       onclick=window.open("{% url 'FormPrint' form.pk %}")>
+                       onclick=window.open("{% url 'pdf' form.pk %}")>
         </td>
     </tr>
     {% endfor %}

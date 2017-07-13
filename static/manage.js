@@ -39,10 +39,13 @@
             tablename = 'FamilyPage'
             break;
     }
-    url=window.location.href
-    re=/^.+\/information/
-    urlbase=re.exec(url)
-    // alert(urlbase)
+    // url=window.location.href
+    // re=/^.+\/information/
+    // urlbase=re.exec(url)
+    urlbase='http://'+window.location.host+'/information'
+     // alert(urlbase+'/'+tablename+operate+'/'+ID)
+    // alert(window.location.host)
+    // alert(url)
     if (operateint==3) {
         if (confirm("你确定提交吗？")) {
              location.href=urlbase+'/'+tablename+operate+'/'+ID
