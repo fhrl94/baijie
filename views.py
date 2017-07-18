@@ -24,26 +24,26 @@ def home(request):
 
 @login_required(login_url='login')
 def pdfs(request,DictIDS):
-    config = pdfkit.configuration(wkhtmltopdf=sys.path[0] + '\information\static\wkhtmltopdf-0.8.3.exe')
+    config = pdfkit.configuration(wkhtmltopdf=sys.path[0] + '/information/static/wkhtmltopdf-0.8.3.exe')
     # string=bytes("",encoding='utf-8')
-    dirlist=sys.path[0] + r'\information\temp\\'
+    dirlist=sys.path[0] + r'/information/temp/'
     for delfile in os.listdir(dirlist):
-        os.remove(sys.path[0] + r'\information\temp\\'+delfile)
+        os.remove(sys.path[0] + r'/information/temp/'+delfile)
     for Dist in DictIDS:
         # print(Dist['id'])
         # string=string+Form(request,Dist['id'],True,True).getvalue()
         # str=models.Empinfo.objects.filter(id=Dist['id']).get().Name
 
-        str=sys.path[0] + '\information\\temp\\'+(time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(
+        str=sys.path[0] + '/information/temp/'+(time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(
                            time.time())))+'.pdf'
         # print(str)
         pdfkit.from_string(Form(request,Dist['id'],True,True).getvalue().decode('utf-8'),
                            str,configuration=config, )
-        os.rename(str,sys.path[0] + '\information\\temp\\' + models.Empinfo.objects.filter(id=Dist['id']).get().Name + '.pdf')
-    files=glob.glob(sys.path[0] + r'\information\temp\*')
-    if os.path.exists(sys.path[0]+r'\information\test.zip'):
-        os.remove(sys.path[0]+r'\information\test.zip')
-    f = zipfile.ZipFile(sys.path[0]+r'\information\test.zip', 'w', zipfile.ZIP_DEFLATED)
+        os.rename(str,sys.path[0] + '/information/temp/' + models.Empinfo.objects.filter(id=Dist['id']).get().Name + '.pdf')
+    files=glob.glob(sys.path[0] + r'/information/temp/*')
+    if os.path.exists(sys.path[0]+r'/information/test.zip'):
+        os.remove(sys.path[0]+r'/information/test.zip')
+    f = zipfile.ZipFile(sys.path[0]+r'/information/test.zip', 'w', zipfile.ZIP_DEFLATED)
     for file in files:
         f.write(file,os.path.basename(file))
     f.close()
@@ -55,7 +55,7 @@ def pdfs(request,DictIDS):
                     yield c
                 else:
                     break
-    the_file_name = sys.path[0]+r'\information\test.zip'
+    the_file_name = sys.path[0]+r'/information/test.zip'
     response = StreamingHttpResponse(file_iterator(the_file_name))
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="{0}{1}.{2}"'.format(
@@ -67,12 +67,12 @@ def pdfs(request,DictIDS):
 
 @login_required(login_url='login')
 def pdf(request,ID):
-    config = pdfkit.configuration(wkhtmltopdf=sys.path[0]+'\information\static\wkhtmltopdf-0.8.3.exe')
-    # file=open(sys.path[0]+r'\information\temp.html','wb')
+    config = pdfkit.configuration(wkhtmltopdf=sys.path[0]+'/information/static/wkhtmltopdf-0.8.3.exe')
+    # file=open(sys.path[0]+r'/information/temp.html','wb')
     # file.write(Form(request,ID,True,True).getvalue())
     # file.close()
     pdfkit.from_string(Form(request,ID,True,True).getvalue().decode('utf-8'),
-                       sys.path[0]+'\information\out.pdf',configuration = config,)
+                       sys.path[0]+'/information/out.pdf',configuration = config,)
     def file_iterator(file_name, chunk_size=512):
         with open(file_name,'rb') as f:
             while True:
@@ -81,7 +81,7 @@ def pdf(request,ID):
                     yield c
                 else:
                     break
-    the_file_name = sys.path[0]+'\information\out.pdf'
+    the_file_name = sys.path[0]+'/information/out.pdf'
     response = StreamingHttpResponse(file_iterator(the_file_name))
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="{0}{1}.{2}"'.format(urlquote(models.Empinfo.objects.filter(id=ID).get().Name),
