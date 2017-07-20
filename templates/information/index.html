@@ -4,33 +4,12 @@
 <head>
 	<title>{{title}}</title>
     <style>
-        table{width:80%;margin:auto;  }
-        th{width: 50%;margin:0 auto;}
-        /*th{text-align: center}*/
-        input,select  {
-            /*outline:0;*/
-            border: 0;
-            /*float: none;*/
-            height: 30px;
-            width: 40%;
-            background-color: #EDEDEF;
-            font-size: 16px;
-            align-self: center;
+        .table{width: 50%;margin: auto;}
+        td,label{height: 30px;
         }
-        label{
-            display:inline-block;
-            color:tomato;
-            background-color: #EDEDEF;
-            height: 30px;
-            width: 50%;
-            text-align: center;
-            border: 0;
-        }
-        .bt{
-            width: auto;
-            height: auto;
-            margin: 0 auto;
-        }
+        label{display:block}
+        td{text-align: left}
+
     </style>
     {% if ID %}
     <script>
@@ -42,23 +21,25 @@
 </head>
 <body>
 
-<table>
-    <tr>
-        <td colspan="2" style="font-size: 30px;text-align: center;margin:0 auto; ">{{title}}</td>
-    </tr>
-    <form method='post'>
+<div class="table" >
+    <form method='post' >
         {% csrf_token %}
-        {{form}}
-        <tr>
-            <td colspan="2" style="text-align: center">
-                <input type="submit" value="提交" class="bt"> &nbsp;&nbsp;
-                {% if ID %}
-                <input type="button" value="返回" class="bt" onclick=javascrtpt:jump()>
-                {% endif %}
-            </td>
-        </tr>
+        <fieldset>
+            <legend align="center">{{title}}</legend>
+            <table style="margin:0 auto;text-align: center">
+            {{form}}
+            <tr>
+                <td colspan="2" style="text-align: center">
+                    <input type="submit" value="提交" class="bt"> &nbsp;&nbsp;
+                    {% if ID %}
+                    <input type="button" value="返回" class="bt" onclick=javascrtpt:jump()>
+                    {% endif %}
+                </td>
+            </tr>
+            </table>
+        </fieldset>
     </form>
-</table>
+</div>
 </body>
 </html>
 
