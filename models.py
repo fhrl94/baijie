@@ -1,4 +1,5 @@
 # coding=utf-8
+import sys
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -205,9 +206,15 @@ class Empinfo(models.Model):
     CurrentResidentialAddress=models.CharField('现居住地址',max_length=255,null=True)
     HomeAddress=models.CharField('家庭地址',max_length=255,null=True)
     IDAddress=models.CharField('身份证地址',max_length=255,null=True)
+    def getcol(self,str):
+        try:
+            # print(getattr(self,str)())
+            return getattr(self, str)()
+        except TypeError:
+            return getattr(self, str)
 
     def __str__(self):
-        return self.IDCardNo    
+        return self.IDCardNo
     
 class Educationinfo(models.Model):
     EducationNature_choice=(
@@ -239,6 +246,12 @@ class Educationinfo(models.Model):
     
     def __str__(self):
         return str(self.id)
+    def getcol(self,str):
+        try:
+            # print(getattr(self,str)())
+            return getattr(self, str)()
+        except TypeError:
+            return getattr(self, str)
     
 class Courseinfo(models.Model):
     TrainingName=models.CharField('培训机构名称',max_length=50)
@@ -251,6 +264,12 @@ class Courseinfo(models.Model):
     
     def __str__(self):
         return str(self.id)
+    def getcol(self,str):
+        try:
+            # print(getattr(self,str)())
+            return getattr(self, str)()
+        except TypeError:
+            return getattr(self, str)
 
 class Jobinfo(models.Model):
     CompanyName=models.CharField('公司全称',max_length=50)
@@ -265,6 +284,12 @@ class Jobinfo(models.Model):
     
     def __str__(self):
         return str(self.id)
+    def getcol(self,str):
+        try:
+            # print(getattr(self,str)())
+            return getattr(self, str)()
+        except TypeError:
+            return getattr(self, str)
 
 class Familyinfo(models.Model):
     Name=models.CharField('姓名',max_length=50)
@@ -277,3 +302,9 @@ class Familyinfo(models.Model):
     
     def __str__(self):
         return str(self.id)
+    def getcol(self,str):
+        try:
+            # print(getattr(self,str)())
+            return getattr(self, str)()
+        except TypeError:
+            return getattr(self, str)

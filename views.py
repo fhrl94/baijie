@@ -2,6 +2,7 @@
 import os
 import time
 
+import xlwt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -18,28 +19,121 @@ from django.http import StreamingHttpResponse
 import zipfile
 import glob
 
+# 文件下载生成器
+def file_iterator(file_name, chunk_size=512):
+    with open(file_name, 'rb') as f:
+        while True:
+            c = f.read(chunk_size)
+            if c:
+                yield c
+            else:
+                break
 # Create your views here.
 def home(request):
     return HttpResponse(u'你好')
+
+@login_required(login_url='login')
+def excel(request,DictIDS):
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('人员基本信息')
+    ws1 = wb.add_sheet('家庭成员')
+    dateFormat = xlwt.XFStyle()
+    dateFormat.num_format_str = 'yyyy/mm/dd'
+    Empcolumn=['Name','get_Sex_display','BirthDate','IDCardNo','Tel','Email','CurrentResidentialAddress','HomeAddress',
+               'EmergencyContactName', 'get_EmergencyContactRelation_display', 'EmergencyContactTel',]
+    Empcolumnstyle=[None,None,dateFormat,None,None,None,None,None,None,None,None,]
+    EFirst=['序号','姓名','性别','出生日期','身份证号','手机号码','电子邮箱','现居住地址','家庭地址',
+            '紧急联系人姓名','与紧急联系人关系','紧急联系电话','毕业学校','学历','专业','学习性质','毕业时间',]
+    Educolumn=['UniversityName','get_EducationBackground_display','Profession','get_EducationNature_display'
+        ,'EndTime',]
+    Educolumnstyle=[None,None,None,None,dateFormat]
+    FFirst=['序号','身份证号','姓名','与本人关系','出生日期','工作单位','职务','电话']
+    Fcolumn=['Name','get_Relation_display','BirthDate','WorkUnit','Duty','Tel',]
+    Fcolumnstyle=[None,None,dateFormat,None,None,None,]
+    l = len(Empcolumn)
+    ws.col(3).width=256*11
+    ws.col(4).width = 256 * 21
+    ws.col(5).width = 256 * 13
+    ws.col(6).width = 256 * 19
+    ws.col(7).width = 256 * 22
+    ws.col(8).width = 256 * 15
+    ws.col(9).width = 256 * 20
+    ws.col(11).width = 256 * 13
+    ws.col(12).width=256*13
+    ws.col(14).width=256*13
+    ws.col(16).width=256*11
+    ws1.col(1).width = 256 * 21
+    ws1.col(4).width = 256 * 11
+    ws1.col(7).width = 256 * 13
+    for i in range(len(EFirst)):
+        ws.write(0,i,EFirst[i])
+    for i in range(len(FFirst)):
+        ws1.write(0,i,FFirst[i])
+    Fi=0
+    for i,Dist in enumerate(DictIDS):
+        # 待review
+        Query=Empinfo.objects.filter(id=Dist['id']).get()
+        ws.write(i + 1, 0, i + 1)
+        for j, col in enumerate(Empcolumn):
+            # print(Query.getcol(col))
+            if Empcolumnstyle[j]==None:
+                ws.write(i + 1, j + 1, Query.getcol(col))
+            else:
+                ws.write(i + 1, j + 1, Query.getcol(col), Empcolumnstyle[j])
+        EQuery=Query.educationinfo_set.order_by('EducationBackground')[:1]
+        # print(EQuery)
+        if EQuery:
+            for j, col in enumerate(Educolumn):
+                # print(query.get(col))
+                # print('______')
+                # print(i+1,l+2,EQuery.get().getcol(col), Educolumnstyle[j])
+                if Educolumnstyle[j]==None:
+                    ws.write(i + 1, l + 1+j, EQuery.get().getcol(col))
+                else:
+                    ws.write(i + 1, l + 1+j, EQuery.get().getcol(col), Educolumnstyle[j])
+        FQuery = Query.familyinfo_set.order_by('id')
+        # print(type(FQuery))
+        for i,query in enumerate(FQuery):
+            ws1.write(Fi + 1, 0, i + 1)
+            ws1.write(Fi + 1, 1, Query.getcol('IDCardNo'))
+            # print(dir(query))
+            for j,col in enumerate(Fcolumn):
+                # print(query.get(col))
+                if Fcolumnstyle[j]==None:
+                    ws1.write(Fi + 1, j + 2, query.getcol(col))
+                else:
+                    ws1.write(Fi + 1, j + 2, query.getcol(col),Fcolumnstyle[j])
+                # print(query.get(col))
+            Fi=Fi+1
+
+    wb.save(sys.path[0] + r'/information/Excel/'+'cs.xls')
+    the_file_name = sys.path[0] + r'/information/Excel/cs.xls'
+    response = StreamingHttpResponse(file_iterator(the_file_name))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}{1}.{2}"'.format(
+        urlquote('员工信息表'),
+        (time.strftime('%Y-%m-%d_%H-%M-%S',
+                       time.localtime(
+                           time.time()))), 'xls')
+    return response
 
 @login_required(login_url='login')
 def pdfs(request,DictIDS):
     config = pdfkit.configuration(wkhtmltopdf=sys.path[0] + '/information/static/wkhtmltopdf-0.8.3.exe')
     # string=bytes("",encoding='utf-8')
     dirlist=sys.path[0] + r'/information/temp/'
+    # 删除上一次生成的所有文件
     for delfile in os.listdir(dirlist):
         os.remove(sys.path[0] + r'/information/temp/'+delfile)
     for Dist in DictIDS:
-        # print(Dist['id'])
-        # string=string+Form(request,Dist['id'],True,True).getvalue()
-        # str=models.Empinfo.objects.filter(id=Dist['id']).get().Name
-
+        # 生成当前时间的文档（防止重复），再根据ID获取文件所在页面字符，然后生成PDF文档，再改名（避免中文名称PDF生成错误）
         str=sys.path[0] + '/information/temp/'+(time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(
                            time.time())))+'.pdf'
         # print(str)
         pdfkit.from_string(Form(request,Dist['id'],True,True).getvalue().decode('utf-8'),
                            str,configuration=config, )
         os.rename(str,sys.path[0] + '/information/temp/' + models.Empinfo.objects.filter(id=Dist['id']).get().Name + '.pdf')
+    # 获取文件路径列表,如果存在test.zip则清除
     files=glob.glob(sys.path[0] + r'/information/temp/*')
     if os.path.exists(sys.path[0]+r'/information/test.zip'):
         os.remove(sys.path[0]+r'/information/test.zip')
@@ -47,14 +141,7 @@ def pdfs(request,DictIDS):
     for file in files:
         f.write(file,os.path.basename(file))
     f.close()
-    def file_iterator(file_name, chunk_size=512):
-        with open(file_name,'rb') as f:
-            while True:
-                c = f.read(chunk_size)
-                if c:
-                    yield c
-                else:
-                    break
+    # 生成文件
     the_file_name = sys.path[0]+r'/information/test.zip'
     response = StreamingHttpResponse(file_iterator(the_file_name))
     response['Content-Type'] = 'application/octet-stream'
@@ -73,14 +160,6 @@ def pdf(request,ID):
     # file.close()
     pdfkit.from_string(Form(request,ID,True,True).getvalue().decode('utf-8'),
                        sys.path[0]+'/information/out.pdf',configuration = config,)
-    def file_iterator(file_name, chunk_size=512):
-        with open(file_name,'rb') as f:
-            while True:
-                c = f.read(chunk_size)
-                if c:
-                    yield c
-                else:
-                    break
     the_file_name = sys.path[0]+'/information/out.pdf'
     response = StreamingHttpResponse(file_iterator(the_file_name))
     response['Content-Type'] = 'application/octet-stream'
