@@ -13,6 +13,7 @@
         th{text-align: left}
         td{width: 99px;text-align:center; }
         .null{border-style: hidden hidden hidden solid }
+        .zhaopian{width:120px }
     </style>
 </head>
 <script src="/static/manage.js">
@@ -54,7 +55,7 @@
             </td>
             <td>出生日期</td>
             <td colspan="2">　{{empform.get.BirthDate|date:'Y-m-d'}}</td>
-            <td colspan="2" rowspan="5">照片</td>
+            <td colspan="2" rowspan="4" class="zhaopian">照片</td>
         </tr>
         <tr>
             <td>籍贯</td>
@@ -94,7 +95,7 @@
         </tr>
         <tr>
             <td style="white-space: nowrap">现居住地址</td>
-            <td colspan="8">{{empform.get.CurrentResidentialAddress|default:""}}　</td>
+            <td colspan="10">{{empform.get.CurrentResidentialAddress|default:""}}　</td>
         </tr>
         <tr>
             <td>家庭地址</td>
@@ -107,11 +108,11 @@
         {% if not status %}
             <tr>
                 <td colspan="11">
-                <input type="button" value="编辑" onclick=javaScript:firm(2,1,{{empform.get.pk}})></td>
+                <input type="button" value="编辑" onclick=javaScript:firm(2,1,{{ empform.get.pk }})></td>
             </tr>
         {% endif %}
     <!-- 教育经历-->
-        <tr colspan="11">
+        <tr>
             <th colspan='11'>二、教育经历（请从最高教育经历开始填写）</th>
         </tr>
 
@@ -132,7 +133,7 @@
             <td colspan="3">{{edu.UniversityName}}</td>
             <td colspan="2">{{edu.Profession}}　</td>
             <td>{{edu.get_EducationBackground_display}}　</td>
-            <td>{{edu.EducationNature}}　</td>
+            <td>{{edu.get_EducationNature_display}}　</td>
             <td colspan="2">{{edu.DiplomaName|default:""}}　</td>
             {% if not status %}
             <td class="null" >
@@ -259,8 +260,11 @@
         </tr>
         {% endif %}
     </table>
-
-    <div align="center">
+    <div style="width: 100%; height: 40px;text-align: center; ">
+    </div>
+    {% if not status%}
+    <div style="position:fixed; bottom:0; left: 0; width: 100%; height: 40px;
+                            background: #00a8ff;text-align: center; ">
         {% if not user.is_authenticated %}
                 <input align="center" type="button" value="提交" onclick=window.location.href="{% url 'result'%}" >
         {% endif %}
@@ -270,6 +274,7 @@
                 <input align="center" type="button" value="返回" onclick=window.location.href="/admin/information/empinfo/" >
         {% endif %}
     </div>
+    {% endif %}
 </body>
 
 </html>
